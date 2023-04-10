@@ -7,7 +7,6 @@ cloud.init();
 const wxContext = cloud.getWXContext();
 const API_KEY = wxContext.API_KEY; // 获取环境变量中的API密钥
 const CHATGPT_API_URL = "https://api.openai.com/v1/engines/davinci-codex/completions";
-const API_KEY = "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"; // 替换为您的ChatGPT API密钥
 
 const shadowsocksConfig = {
     host: wxContext.SHADOWSOCKS_HOST,

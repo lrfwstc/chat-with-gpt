@@ -21,7 +21,7 @@ Page({
     });
 
     wx.cloud.callFunction({
-      name: "chatWithGPT",
+      name: "chatwithgpt",
       data: { inputMessage },
       success: (res) => {
         this.setData({

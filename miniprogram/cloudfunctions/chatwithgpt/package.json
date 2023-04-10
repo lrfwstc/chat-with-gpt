@@ -4,14 +4,13 @@
     "description": "",
     "main": "index.js",
     "dependencies": {
-      "axios": "^0.26.1",
-      "socks-proxy-agent": "^6.0.0"
+        "axios": "^0.26.1",
+        "socks-proxy-agent": "^6.0.0",
+        "wx-server-sdk": "^2.6.3"
     },
-    "devDependencies": {},
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
     "license": "ISC"
-  }
-  
+}

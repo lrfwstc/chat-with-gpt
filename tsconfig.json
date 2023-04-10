@@ -23,8 +23,8 @@
   },
   "include": [
     "./**/*.ts"
-, "miniprogram/pages/GPT/GPT.js", "miniprogram/pages/kaihu/kaihu.js"  ],
+ ],
   "exclude": [
-    "node_modules"
+    "node_modules", "miniprogram/pages/GPT/GPT.js" 
   ]
 }
