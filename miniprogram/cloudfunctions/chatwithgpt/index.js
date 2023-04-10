@@ -1,6 +1,6 @@
 const cloud = require("wx-server-sdk");
 const axios = require("axios");
-const SocksProxyAgent = require("socks-proxy-agent");
+const SocksProxyAgent = require('socks-proxy-agent');
 
 cloud.init();
 

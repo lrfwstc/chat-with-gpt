@@ -5,7 +5,7 @@
     "main": "index.js",
     "dependencies": {
         "axios": "^0.26.1",
-        "socks-proxy-agent": "^6.0.0",
+        "socks-proxy-agent": "^4.0.2",
         "wx-server-sdk": "^2.6.3"
     },
     "scripts": {
