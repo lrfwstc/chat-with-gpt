@@ -1,0 +1,8 @@
+<!--pages/通知存款/tongzhicunkuan.wxml-->
+<view>
+<download_file address="cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/通知存款/对公7天通知存款 优惠利率申请.pdf"></download_file>
+</view>
+<!-- <button bindtap="downloadFile" type="primary" 
+data-fileid = 
+"cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/通知存款/对公7天通知存款 优惠利率申请.pdf">对公7天通知存款 优惠利率申请</button>
+ -->

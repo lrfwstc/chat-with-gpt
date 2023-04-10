@@ -1,0 +1,22 @@
+<!--pages/tiexian/tiexian.wxml-->
+<!-- <view class="inputContent">
+<text>请输入下载链接：</text>
+<input type="text" bindinput="getContent"></input>
+</view> -->
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/企业授权书（2022）.pdf">企业授权书</button>
+
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/关于申请授信的股东会（大会）决议.pdf">股东会决议</button>
+
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/协议签约业务授权书.doc">协议签约业务授权书</button>
+
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/绿色信贷协议.doc">绿色信贷协议</button>
+
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/诚信廉洁告知书暨贷款用途承诺函的通知.pdf">诚信廉洁告知书</button>
+
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/贴现/贴现申请书.pdf">贴现申请书</button>

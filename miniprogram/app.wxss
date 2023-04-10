@@ -1,0 +1,99 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  box-sizing: border-box;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+} 
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: large;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.little_title {
+  display: flex;
+  flex-direction: column;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size:small;
+  padding-left: 3px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  color: rgb(0, 0, 0);
+  font-size:smaller;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.admin {
+  display: flex;
+  flex-direction: column;
+  color: rgb(252, 0, 0);
+  font-size:smaller;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.bolder_body {
+  display: flex;
+  flex-direction: column;
+  color: rgb(0, 0, 0);
+  font-size:smaller;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-weight: bold;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.anno {
+  display: flex;
+  flex-direction: column;
+  color: rgb(54, 54, 54);
+  font-size:10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.inputContent{
+  margin: 100rpx 20rpx 20rpx 20rpx;
+}
+input{
+  border: 1rpx solid #ccc;
+  margin-top: 20rpx;
+  height: 80rpx;
+  min-height: 80rpx;
+}

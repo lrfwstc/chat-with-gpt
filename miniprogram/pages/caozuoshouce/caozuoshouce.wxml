@@ -1,0 +1,3 @@
+<!--pages/caozuoshouce/caozuoshouce.wxml-->
+<button bindtap="downloadFile" type="primary" 
+data-fileid = "cloud://cloud-7grhhpc60709c2ee.636c-cloud-7grhhpc60709c2ee-1313589857/企业税融通提款流程.pdf">企业贷款操作手册</button>

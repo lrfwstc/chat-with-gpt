@@ -1,0 +1,3 @@
+<!--components/download_file/download_file.wxml-->
+<button bindtap="downloadFile" type="primary"
+>操作手册</button>

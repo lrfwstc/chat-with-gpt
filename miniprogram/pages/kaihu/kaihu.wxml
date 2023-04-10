@@ -1,0 +1,24 @@
+<!--pages/kaihu/kaihu.wxml-->
+<text class="title">
+  核实现场
+</text><text class="body">
+1.公司门头拍照（最好有门头）
+2.客户经理与法人合影或者视频电话
+3.法人身份证（最好原件，没有就照片）
+4.经办人身份证
+5.网银使用人身份证
+6.营业执照正本
+7.基本账户信息表（开一般户）
+</text><text class="title">
+柜台开户需要带的资料
+</text><text class="body">
+1.营业执照原件
+2.租赁协议（经营地或注册地）
+3.公司章程
+4.法人身份证
+5.经办人身份证
+6.一套章</text>
+
+<view class="container">
+  <button open-type="onShareAppMessage">一键转发</button>
+</view>

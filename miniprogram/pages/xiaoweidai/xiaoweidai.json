@@ -1,0 +1,7 @@
+{
+    "usingComponents": { },
+    "backgroundTextStyle": "light",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTitleText": "小微贷",
+  "navigationBarTextStyle": "black"
+}

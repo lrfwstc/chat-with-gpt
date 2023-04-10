@@ -1,0 +1,7 @@
+{
+    "usingComponents": { },
+    "backgroundTextStyle": "light",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTitleText": "通知存款",
+  "navigationBarTextStyle": "black"
+}

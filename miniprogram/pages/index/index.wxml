@@ -1,0 +1,33 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- <view class="userinfo">
+    <block wx:if="{{false}}">
+      <view class="userinfo-avatar" bindtap="bindViewTap">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <open-data type="userNickName"></open-data>
+    </block>
+    <block wx:if="{{!hasUserInfo}}">
+      <button bindtap="getUserProfile"> 获取头像昵称 </button>
+    </block>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view> -->
+  <view class="usermotto">
+    <button class="user-motto" bindtap="navigateTo" data-pages="xsdyd"> 线上抵押贷 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="puhuiedai"> 普惠e贷 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="shuirongtong"> 税融通 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="kaihu"> 开户 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="tiexian"> 贴现 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="lilvxiugai"> 小企业利率修改 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="caozuoshouce"> 各类操作手册 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="tongzhicunkuan"> 通知存款利率上浮 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="jieya"> 解押 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="fangkuan"> 放款 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="xiaoweidai"> 小微贷 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="GPT"> GPT </button>
+    
+  </view>
+</view>

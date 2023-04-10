@@ -1,0 +1,30 @@
+{
+    "usingComponents": {
+        "download_file": "./components/download_file/download_file"
+    },
+    "pages": [
+        "pages/index/index",
+        "pages/logs/logs",
+        "pages/xsdyd/xsdyd",
+        "pages/kaihu/kaihu",
+        "pages/tiexian/tiexian",
+        "pages/lilvxiugai/lilvxiugai",
+        "pages/caozuoshouce/caozuoshouce",
+        "pages/tongzhicunkuan/tongzhicunkuan",
+        "components/download_file/download_file",
+        "pages/jieya/jieya",
+        "pages/puhuiedai/puhuiedai",
+        "pages/shuirongtong/shuirongtong",
+        "pages/fangkuan/fangkuan",
+        "pages/xiaoweidai/xiaoweidai",
+        "pages/GPT/GPT"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "闻道先生的小程序",
+        "navigationBarTextStyle": "black"
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json"
+}
