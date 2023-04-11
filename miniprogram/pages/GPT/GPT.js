@@ -1,35 +1,58 @@
+// GPT.js
+const app = getApp();
+
 Page({
   data: {
-    inputMessage: "",
-    messages: [
-      { sender: "ChatGPT", content: "你好！有什么问题我可以帮助你解答吗？" },
-    ],
+    inputText: "",
+    outputText: "",
   },
+
+  onLoad: function () {},
 
   onInput: function (e) {
-    this.setData({ inputMessage: e.detail.value });
+    this.setData({
+      inputText: e.detail.value,
+    });
   },
 
-  onSendMessage: function () {
-    const { inputMessage } = this.data;
+  onSend: function () {
+    const { inputText } = this.data;
 
-    if (!inputMessage) return;
+    if (inputText.trim() === "") {
+      wx.showToast({
+        title: "请输入内容",
+        icon: "none",
+        duration: 2000,
+      });
+      return;
+    }
 
-    this.setData({
-      messages: this.data.messages.concat([{ sender: "User", content: inputMessage }]),
-      inputMessage: "",
+    this.callGPT(inputText);
+  },
+
+  callGPT: function (prompt) {
+    wx.showLoading({
+      title: "处理中...",
     });
 
-    wx.cloud.callFunction({
-      name: "chatwithgpt",
-      data: { inputMessage },
+    wx.request({
+      url: "183.206.166.189:3000/api/generate-text", // 替换为您的主机地址和端口
+      method: "POST",
+      data: {
+        prompt: prompt,
+        maxTokens: 50,
+        temperature: 0.7,
+      },
       success: (res) => {
         this.setData({
-          messages: this.data.messages.concat([{ sender: "ChatGPT", content: res.result }]),
+          outputText: res.data.response,
         });
       },
       fail: (err) => {
-        console.error("调用云函数失败", err);
+        console.error("调用失败", err);
+      },
+      complete: () => {
+        wx.hideLoading();
       },
     });
   },
