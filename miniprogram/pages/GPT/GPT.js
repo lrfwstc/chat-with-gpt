@@ -3,57 +3,57 @@ const app = getApp();
 
 Page({
   data: {
-    inputText: "",
-    outputText: "",
+    inputMessage: '',
+    messages: [],
   },
 
-  onLoad: function () {},
-
-  onInput: function (e) {
-    this.setData({
-      inputText: e.detail.value,
-    });
+  onInputMessage: function (e) {
+    this.setData({ inputMessage: e.detail.value });
   },
 
-  onSend: function () {
-    const { inputText } = this.data;
+  onSendMessage: function () {
+    this.sendMessage(this.data.inputMessage);
+    this.setData({ inputMessage: '' });
+  },
 
-    if (inputText.trim() === "") {
-      wx.showToast({
-        title: "请输入内容",
-        icon: "none",
-        duration: 2000,
+  sendMessage: function (message) {
+    if (!message) return;
+
+    const msg = { content: message, fromUser: true };
+    this.setData({ messages: [...this.data.messages, msg] });
+
+    this.callBackend(message)
+      .then((response) => {
+        const reply = { content: response, fromUser: false };
+        this.setData({ messages: [...this.data.messages, reply] });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-      return;
-    }
-
-    this.callGPT(inputText);
   },
 
-  callGPT: function (prompt) {
-    wx.showLoading({
-      title: "处理中...",
-    });
-
-    wx.request({
-      url: "183.206.166.189:3000/api/generate-text", // 替换为您的主机地址和端口
-      method: "POST",
-      data: {
-        prompt: prompt,
-        maxTokens: 50,
-        temperature: 0.7,
-      },
-      success: (res) => {
-        this.setData({
-          outputText: res.data.response,
-        });
-      },
-      fail: (err) => {
-        console.error("调用失败", err);
-      },
-      complete: () => {
-        wx.hideLoading();
-      },
+  callBackend: function (message) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: 'http://183.206.166.189:3000/api/chat', // 替换为您的实际主机地址和端口
+        method: 'POST',
+        header: {
+          'content-type': 'application/json',
+        },
+        data: {
+          message: message,
+        },
+        success: (res) => {
+          if (res.statusCode === 200) {
+            resolve(res.data.response);
+          } else {
+            reject(new Error('Failed to get response from server'));
+          }
+        },
+        fail: (err) => {
+          reject(err);
+        },
+      });
     });
   },
 });
