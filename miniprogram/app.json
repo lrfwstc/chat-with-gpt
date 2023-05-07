@@ -17,7 +17,10 @@
         "pages/shuirongtong/shuirongtong",
         "pages/fangkuan/fangkuan",
         "pages/xiaoweidai/xiaoweidai",
-        "pages/GPT/GPT"
+        "pages/login/login",
+        "pages/manager/manager",
+        "pages/admin/admin",
+        "pages/temp/temp"
     ],
     "window": {
         "backgroundTextStyle": "light",

@@ -27,7 +27,7 @@
     <button class="user-motto" bindtap="navigateTo" data-pages="jieya"> 解押 </button>
     <button class="user-motto" bindtap="navigateTo" data-pages="fangkuan"> 放款 </button>
     <button class="user-motto" bindtap="navigateTo" data-pages="xiaoweidai"> 小微贷 </button>
-    <button class="user-motto" bindtap="navigateTo" data-pages="GPT"> GPT </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="login"> 对公日志入口 </button>
     
   </view>
 </view>
