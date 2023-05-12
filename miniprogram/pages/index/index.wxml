@@ -28,6 +28,7 @@
     <button class="user-motto" bindtap="navigateTo" data-pages="fangkuan"> 放款 </button>
     <button class="user-motto" bindtap="navigateTo" data-pages="xiaoweidai"> 小微贷 </button>
     <button class="user-motto" bindtap="navigateTo" data-pages="login"> 对公日志入口 </button>
+    <button class="user-motto" bindtap="navigateTo" data-pages="temp"> 获取微信id </button>
     
   </view>
 </view>

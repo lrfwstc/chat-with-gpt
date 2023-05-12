@@ -1,3 +1,5 @@
+
 <view class="container">
   <text>您的 OpenID: {{openid}}</text>
+  <text class="error">{{errorMsg}}</text>
 </view>
