@@ -1,6 +1,7 @@
 Page({
   data: {
-    openid: ''
+    openid: '',
+    errorMsg: ''
   },
 
   onLoad: function() {
@@ -14,13 +15,19 @@ Page({
           method: 'POST',
           data: { code: code },
           success: res => {
-            this.setData({ openid: res.data.openid });
+            if (res.statusCode === 200) {
+              this.setData({ openid: res.data.openid });
+            } else {
+              console.error('获取 OpenID 失败，服务器返回状态码：', res.statusCode);
+              this.setData({ errorMsg: '获取 OpenID 失败，服务器返回状态码：' + res.statusCode });
+            }
           },
           fail: error => {
             console.error('获取 OpenID 失败：', error);
             this.setData({ errorMsg: '获取 OpenID 失败：' + JSON.stringify(error) });
           }
         });
+        
       }
     });
   }
