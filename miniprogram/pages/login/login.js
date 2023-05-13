@@ -1,0 +1,99 @@
+Page({
+	data: {
+	  openid: '',
+	  showRegisterForm: false
+	},
+	onLoad: function() {
+		// 获取用户的 OpenID
+		wx.login({
+		  success: res => {
+			// 发送 res.code 到后端换取 openId
+			console.log('code成功',res.code); 
+			wx.request({
+			  url: 'https://wendaoxiansheng.com/api/get_openid',
+			  method: 'POST',
+			  data: {
+				code: res.code
+			  },
+			  success: res => {
+				console.log('get_openid成功',res.data.openid); 
+				let openid = res.data.openid;
+				this.setData({
+				  openid: openid
+				});
+				// 使用 openid 检查用户是否已注册
+				wx.request({
+				  url: 'https://wendaoxiansheng.com/api/check_user',
+				  method: 'POST',
+				  data: {
+					openid: openid
+				  },
+				  success: res => {
+					console.log('check_user成功',res.statusCode); 
+					if (res.statusCode == 200) {
+					  let role = res.data.role;
+					  // 如果用户已注册，根据角色跳转到相应页面
+					  if (role) {
+						if (role === 'Manager') {
+						  wx.redirectTo({
+							url: '/pages/manager/manager'
+						  });
+						} else if (role === 'Admin') {
+						  wx.redirectTo({
+							url: '/pages/admin/admin'
+						  });
+						}
+					  } else {
+						// 如果用户未注册，显示注册表单并等待用户提交
+						this.setData({
+						  showRegisterForm: true
+						});
+					  }
+					} else {
+					  // HTTP 状态码不是 200，显示错误消息
+					  wx.showModal({
+						title: '错误',
+						content: `服务器出现问题，返回的状态码是 ${res.statusCode}，请稍后再试。`,
+						showCancel: false
+					  });
+					  
+					}
+				  }
+				});
+			  }
+			});
+		  }
+		});
+	},
+	  
+	// 用户提交注册表单
+	register: function(e) {
+	  let openid = this.data.openid;  // 从之前保存的数据中获取 openid
+	  let name = e.detail.value.name;  // 获取用户输入的姓名
+	  let role = e.detail.value.role;  // 获取用户选择的角色
+  
+	  // 发送注册信息到后端
+	  wx.request({
+		url: 'https://wendaoxiansheng.com/api/register',
+		method: 'POST',
+		data: {
+		  openid: openid,
+		  name: name,
+		  role: role
+		},
+		success: res => {
+		  // 注册成功后，根据角色跳转到相应页面
+		  if (role === 'Manager') {
+			wx.redirectTo({
+			  url: '/pages/manager/manager'
+			});
+		  } else if (role === 'Admin') {
+			wx.redirectTo({
+			  url: '/pages/admin/admin'
+			});
+		  }
+		}
+	  });
+	}
+  });
+  

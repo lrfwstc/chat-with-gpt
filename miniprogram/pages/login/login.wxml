@@ -1,2 +1,19 @@
-<!--pages/login/login.wxml-->
-<text>pages/login/login.wxml</text>
+<!-- 登录页面 -->
+<view class='container'>
+  <!-- 注册表单 -->
+  <form bindsubmit='register' wx:if="{{showRegisterForm}}">
+    <view class='input-container'>
+      <text>姓名</text>
+      <input type='text' name='name' class='input' placeholder='请输入您的姓名'/>
+    </view>
+    <view class='input-container'>
+      <text>角色</text>
+      <picker mode='selector' range="{{['Manager', 'Admin']}}" name='role' class='input'>
+        <view class='picker'>
+          请选择角色: {{role}}
+        </view>
+      </picker>
+    </view>
+    <button formType='submit'>注册</button>
+  </form>
+</view>

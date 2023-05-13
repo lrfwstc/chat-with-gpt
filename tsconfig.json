@@ -26,6 +26,6 @@
      "./**/*.ts"
  ],
   "exclude": [
-    "node_modules", "miniprogram/pages/GPT/GPT.js" ,"miniprogram/pages/temp/temp.js"
+    "node_modules", "miniprogram/pages/GPT/GPT.js" ,"miniprogram/pages/temp/temp.js","miniprogram/pages/login/login.js"
   ]
 }
