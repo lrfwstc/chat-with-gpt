@@ -1,7 +1,10 @@
 Page({
 	data: {
 	  openid: '',
-	  showRegisterForm: false
+	  showRegisterForm: false,
+	  roleIndex: -1,  // 添加一个新的属性来保存角色的索引
+      roles: ['Manager', 'Admin']  // 添加一个数组来保存所有的角色
+  
 	},
 	onLoad: function() {
 		// 获取用户的 OpenID
@@ -18,6 +21,7 @@ Page({
 			  success: res => {
 				console.log('get_openid成功',res.data.openid); 
 				let openid = res.data.openid;
+				if (res.statusCode == 200) {
 				this.setData({
 				  openid: openid
 				});
@@ -53,25 +57,48 @@ Page({
 					  // HTTP 状态码不是 200，显示错误消息
 					  wx.showModal({
 						title: '错误',
-						content: `服务器出现问题，返回的状态码是 ${res.statusCode}，请稍后再试。`,
+						content: `check_user错误，返回的状态码是 ${res.statusCode}，请稍后再试。`,
 						showCancel: false
 					  });
 					  
 					}
 				  }
 				});
+				}else {
+					// HTTP 状态码不是 200，显示错误消息
+					wx.showModal({
+					  title: '错误',
+					  content: `get_openid错误，返回的状态码是 ${res.statusCode}，请稍后再试。`,
+					  showCancel: false
+					});
+					
+				  }
 			  }
 			});
 		  }
 		});
 	},
+	bindPickerChange: function(e) {
+		this.setData({
+		  roleIndex: e.detail.value
+		});
+	  },
 	  
 	// 用户提交注册表单
 	register: function(e) {
-	  let openid = this.data.openid;  // 从之前保存的数据中获取 openid
-	  let name = e.detail.value.name;  // 获取用户输入的姓名
-	  let role = e.detail.value.role;  // 获取用户选择的角色
-  
+	    let openid = this.data.openid;
+		let name = e.detail.value.name;
+		let roleIndex = this.data.roleIndex;
+		// 如果 id、name 或 roleIndex 不存在，显示错误消息并返回
+		if (!openid || !name || roleIndex < 0) {
+		  wx.showModal({
+			title: '错误',
+			content: '请填写所有的字段。',
+			showCancel: false
+		  });
+		  return;
+		}
+		let role = this.data.roles[roleIndex];  // 使用 roleIndex 获取角色
 	  // 发送注册信息到后端
 	  wx.request({
 		url: 'https://wendaoxiansheng.com/api/register',

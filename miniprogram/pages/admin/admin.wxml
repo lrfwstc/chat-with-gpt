@@ -1,2 +1,3 @@
-<!--pages/admin/admin.wxml-->
-<text>pages/admin/admin.wxml</text>
+<view class="usermotto">
+    <button class="user-motto" bindtap="goToUsers"> 人员名单管理 </button>
+  </view>

@@ -8,9 +8,9 @@
     </view>
     <view class='input-container'>
       <text>角色</text>
-      <picker mode='selector' range="{{['Manager', 'Admin']}}" name='role' class='input'>
+      <picker mode='selector' range="{{roles}}" bindchange="bindPickerChange" name='role' class='input'>
         <view class='picker'>
-          请选择角色: {{role}}
+          请选择角色: {{roleIndex >= 0 ? roles[roleIndex] : '请选择'}}
         </view>
       </picker>
     </view>

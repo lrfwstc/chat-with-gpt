@@ -20,7 +20,8 @@
         "pages/login/login",
         "pages/manager/manager",
         "pages/admin/admin",
-        "pages/temp/temp"
+        "pages/temp/temp",
+        "pages/users/users"
     ],
     "window": {
         "backgroundTextStyle": "light",

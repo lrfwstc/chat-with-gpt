@@ -1,1 +1,57 @@
-/* pages/manager/manager.wxss */
+.container {
+    padding: 20rpx;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Add this line */
+    flex-wrap: wrap;
+    margin-bottom: 20rpx;
+}
+
+.text {
+    font-size: 28rpx;
+    color: #333;
+    margin-bottom: 10rpx;
+}
+
+.input {
+    height: 20rpx;
+    border: 1px solid #ccc;
+    padding: 0rpx;
+    width: 700rpx;
+    margin: 0rpx;
+}
+
+.input-wan {
+    height: 20rpx;
+    border: 1px solid #ccc;
+    padding: 0rpx;
+    width: 120rpx;
+    margin: 0rpx;
+}
+
+.input-hu {
+    height: 20rpx;
+    border: 1px solid #ccc;
+    padding: 0rpx;
+    width: 60rpx;
+    margin: 0rpx;
+}
+
+.input-text {
+    height: 100rpx;
+    border: 1px solid #ccc;
+    padding: 0 10rpx;
+    margin-bottom: 20rpx;
+}
+
+.button {
+    height: 80rpx;
+    line-height: 80rpx;
+    background-color: #1aad19;
+    color: #fff;
+    text-align: center;
+    margin-top: 50rpx;
+}

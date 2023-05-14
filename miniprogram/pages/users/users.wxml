@@ -1,0 +1,8 @@
+<!-- 用户列表 -->
+<view class='container'>
+  <view wx:for="{{users}}" wx:key="id" class='user'>
+    <text class="user-text"> 姓名: {{item.name}}, 角色: {{item.role}}</text>
+    <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+  </view>
+</view>
+
