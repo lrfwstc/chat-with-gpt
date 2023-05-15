@@ -1,5 +1,6 @@
 .container {
-    
+    display: flex;
+    flex-direction: column;
     padding: 20rpx;
     text-align: left;
     left: 0;
@@ -8,20 +9,31 @@
 .flex-container {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Add this line */
+    align-items: center; 
+    align-self: flex-start; /* 添加这行 */
     flex-wrap: wrap;
     margin-bottom: 20rpx;
     text-align: left;
     left: 0;
 }
+text {
+    font-size: 26rpx;
+    color: #333;
+    margin-bottom: 10rpx;
+    text-align: left;
+    left: 0;
+}
 
 .text {
-    
     font-size: 28rpx;
     color: #333;
     margin-bottom: 10rpx;
     text-align: left;
     left: 0;
+}
+
+.text-container {
+    align-self: flex-start;
 }
 
 .input {
