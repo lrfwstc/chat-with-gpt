@@ -1,5 +1,8 @@
 .container {
+    
     padding: 20rpx;
+    text-align: left;
+    left: 0;
 }
 
 .flex-container {
@@ -8,12 +11,17 @@
     align-items: center; /* Add this line */
     flex-wrap: wrap;
     margin-bottom: 20rpx;
+    text-align: left;
+    left: 0;
 }
 
 .text {
+    
     font-size: 28rpx;
     color: #333;
     margin-bottom: 10rpx;
+    text-align: left;
+    left: 0;
 }
 
 .input {
@@ -25,10 +33,13 @@
 }
 
 .input-wan {
-    height: 20rpx;
+    line-height: 20px;
+    padding: 0;
+    font-size: 16px;
+    box-sizing: border-box;
+    height: 0;
     border: 1px solid #ccc;
-    padding: 0rpx;
-    width: 120rpx;
+    width: 80rpx;
     margin: 0rpx;
 }
 

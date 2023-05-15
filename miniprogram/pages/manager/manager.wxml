@@ -4,8 +4,10 @@
         <text> 日期：{{date}}</text>
     </view>
     <!-- 对公存款 -->
+    <text>一、业绩</text>
     <view class="flex-container">
-        <text>对公存款: 余额</text>
+        <text>1.对公存款: </text></view>
+        <view class="flex-container"><text>余额</text>
 		<input class="input-wan" type="number" value="{{public_deposit_balance}}" bindinput="handleInput" data-field="public_deposit_balance" />
         <text>万元，比上日新增</text>
         <input class="input-wan" type="number" value="{{public_deposit_day_increase}}" bindinput="handleInput" data-field="public_deposit_day_increase" />
