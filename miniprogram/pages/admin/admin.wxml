@@ -1,3 +1,17 @@
 <view class="usermotto">
-    <button class="user-motto" bindtap="goToUsers"> 人员名单管理 </button>
+  <button class="user-motto" bindtap="goToUsers"> 人员名单管理 </button>
+  <view class="views">
+    <picker mode="date" start="2020-01-01" end="{{date}}" bindchange="bindStartDateChange">
+      <view class="picker">
+        选择开始日期：{{startDate}}
+      </view>
+    </picker>
+    <picker mode="date" start="{{startDate}}" end="{{date}}" bindchange="bindEndDateChange">
+      <view class="picker">
+        选择结束日期：{{endDate}}
+      </view>
+    </picker>
+  
+  <button bindtap="downloadWorklog">下载工作日志</button>
   </view>
+</view>

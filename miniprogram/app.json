@@ -3,6 +3,7 @@
         "download_file": "./components/download_file/download_file"
     },
     "pages": [
+        "pages/login_first/login_first",
         "pages/index/index",
         "pages/logs/logs",
         "pages/xsdyd/xsdyd",
@@ -22,6 +23,7 @@
         "pages/admin/admin",
         "pages/temp/temp",
         "pages/users/users"
+        
     ],
     "window": {
         "backgroundTextStyle": "light",

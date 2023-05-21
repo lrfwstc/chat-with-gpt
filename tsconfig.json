@@ -30,5 +30,6 @@
     , "miniprogram/pages/admin/admin.js" 
     , "miniprogram/pages/users/users.js" 
     , "miniprogram/pages/manager/manager.js"
+    , "miniprogram/pages/login_first/login_first.js"
   ]
 }

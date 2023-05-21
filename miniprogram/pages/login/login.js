@@ -49,9 +49,11 @@ Page({
 						}
 					  } else {
 						// 如果用户未注册，显示注册表单并等待用户提交
-						this.setData({
-						  showRegisterForm: true
-						});
+						wx.showModal({
+							title: '提示',
+							content: '您无权限进入此页面',
+							showCancel: false
+						  });
 					  }
 					} else {
 					  // HTTP 状态码不是 200，显示错误消息
@@ -118,6 +120,12 @@ Page({
 			wx.redirectTo({
 			  url: '/pages/admin/admin'
 			});
+		  } else{
+			wx.showModal({
+				title: '提示',
+				content: '您无权限进入此页面',
+				showCancel: false
+			  });
 		  }
 		}
 	  });

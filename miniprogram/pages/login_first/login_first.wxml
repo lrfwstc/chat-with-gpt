@@ -1,0 +1,19 @@
+<!-- 登录页面 -->
+<view class='container'>
+  <!-- 注册表单 -->
+  <form bindsubmit='register' wx:if="{{showRegisterForm}}">
+    <view class='input-container'>
+      <text>姓名</text>
+      <input type='text' name='name' class='input' placeholder='请输入您的姓名'/>
+    </view>
+    <view class='input-container'>
+      <text>角色</text>
+      <picker mode='selector' range="{{roles}}" bindchange="bindPickerChange" name='role' class='input'>
+        <view class='picker'>
+          {{roleIndex >= 0 ? roles[roleIndex] : '请选择'}}
+        </view>
+      </picker>
+    </view>
+    <button formType='submit'>注册</button>
+  </form>
+</view>

@@ -27,7 +27,7 @@
     </view>
     <view class="flex-container">
         <text>余额</text>
-        <input class="input-hu" type="number" value="{{public_effective_account}}" bindinput="handleInput" data-field="public_effective_account" />
+        <input class="input-hu" type="number" value="{{public_effective_account_balance}}" bindinput="handleInput" data-field="public_effective_account" />
         <text>户，比上日新增</text>
         <input class="input-hu" type="number" value="{{public_effective_account_day_increase}}" bindinput="handleInput" data-field="public_effective_account_day_increase" />
         <text>户，比基数新增</text>
@@ -42,7 +42,7 @@
     </view>
     <view class="flex-container">
         <text>余额</text>
-        <input class="input-hu" type="number" value="{{deposit_value_customer}}" bindinput="handleInput" data-field="deposit_value_customer" />
+        <input class="input-hu" type="number" value="{{deposit_value_customer_balance}}" bindinput="handleInput" data-field="deposit_value_customer" />
         <text>户，比上日新增</text>
         <input class="input-hu" type="number" value="{{deposit_value_customer_day_increase}}" bindinput="handleInput" data-field="deposit_value_customer_day_increase" />
         <text>户，比基数新增</text>
@@ -57,7 +57,7 @@
     </view>
     <view class="flex-container">
         <text>余额</text>
-        <input class="input-hu" type="number" value="{{digital_currency_active_account}}" bindinput="handleInput" data-field="digital_currency_active_account" />
+        <input class="input-hu" type="number" value="{{digital_currency_active_account_balance}}" bindinput="handleInput" data-field="digital_currency_active_account" />
         <text>户，比上日新增</text>
         <input class="input-hu" type="number" value="{{digital_currency_active_account_day_increase}}" bindinput="handleInput" data-field="digital_currency_active_account_day_increase" />
         <text>户，比基数新增</text>

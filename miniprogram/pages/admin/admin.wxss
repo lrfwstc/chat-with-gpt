@@ -35,4 +35,20 @@
   
   .usermotto {
 	margin-top: 20px;
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	flex-wrap: wrap;
+  }
+
+  .views{
+	border: 1px solid #999;
+	margin-top: 10px;
+	width: 600rpx;
+	
+  }
+
+  .picker{
+	border: 1px solid #999;
+	margin: 10px;
   }

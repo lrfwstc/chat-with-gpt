@@ -1,8 +1,33 @@
-<!-- 用户列表 -->
-<view class='container'>
-  <view wx:for="{{users}}" wx:key="id" class='user'>
-    <text class="user-text"> 姓名: {{item.name}}, 角色: {{item.role}}</text>
-    <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
-  </view>
-</view>
-
+<van-collapse class="collapse" value="{{ activeNames }}" bind:change="onChange">
+  <van-collapse-item class="collapse-item" title="对公客户经理" name="1">
+    <view class='user' wx:for="{{managerUsers}}" wx:key="id" >
+      <text class="text"> {{item.name}},今日日志：{{item.exist}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+    </view>
+  </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="小微客户经理" name="2">
+    <view class='user' wx:for="{{minmanagerUsers}}" wx:key="id" >
+      <text class="text"> {{item.name}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+    </view>
+  </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="游客" name="3">
+    <view class='user' wx:for="{{visitorUsers}}" wx:key="id" >
+      <text class="text"> {{item.name}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+    </view>
+  </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="管理员" name="4">
+    <view class='user' wx:for="{{adminUsers}}" wx:key="id" >
+      <text class="text"> {{item.name}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+    </view>
+  </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="待审核人员" name="5">
+    <view class='user' wx:for="{{preusers}}" wx:key="id" >
+      <text class="text"> {{item.name}},申请角色：{{roleNames[item.role]}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='exchangeUser'>通过</button>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>拒绝</button>
+    </view>
+  </van-collapse-item>
+</van-collapse>
