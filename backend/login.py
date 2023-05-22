@@ -12,6 +12,8 @@ import io
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:bdthznb666@172.17.0.2/wechat_app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_POOL_SIZE'] = 200  # 设置连接池大小为 20
+
 
 db = SQLAlchemy(app)
 
@@ -128,13 +130,13 @@ def export_worklog():
         'forecast_public_effective_account_base_increase': '预测对公有效户年增量',
         'forecast_deposit_value_customer': '预测存款价值客户',
         'forecast_deposit_value_customer_base_increase': '预测存款价值客户年增量',
-        'new_customer_visit_name': '新客户拜访姓名',
-        'new_customer_visit_position': '新客户拜访职务',
-        'chart_battle_customer_visit_name': '挂图作战客户拜访姓名',
-        'chart_battle_customer_visit_position': '挂图作战客户拜访职务',
+        'new_customer_visit_name': '拜访新户名称',
+        'new_customer_visit_position': '新客户拜访姓名职务',
+        'chart_battle_customer_visit_name': '拜访挂图作战客户名称',
+        'chart_battle_customer_visit_position': '挂图作战客户拜访姓名职务',
         'chart_battle_customer_visit_matters': '挂图作战客户拜访事项',
-        'other_customer_visit_name': '其他客户拜访姓名',
-        'other_customer_visit_position': '其他客户拜访职务',
+        'other_customer_visit_name': '拜访其他客户名称',
+        'other_customer_visit_position': '其他客户拜访姓名职务',
         'other_customer_visit_matters': '其他客户拜访事项',
         'other_work': '其他工作'
     })

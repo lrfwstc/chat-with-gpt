@@ -1,4 +1,4 @@
-admin功能：xls按可选日期输出、xls按周统计、审核login注册、今天未报已报人员清单
-manager功能：读取上一次上传日志
+admin功能：xls按周统计、增加科长、二支行长角色权限
+manager功能：
 manager防呆：同一人单日重复上传报错
 login功能：

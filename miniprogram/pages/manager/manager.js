@@ -40,8 +40,13 @@ Page({
   // 处理输入事件
   handleInput: function(e) {
     const { field } = e.currentTarget.dataset;
+    let value = e.detail.value;
+
+    // 只保留数字和负号，其他字符替换为空字符串
+    value = value.replace(/[^\d-]/g, '');
+
     this.setData({
-      [field]: e.detail.value,
+      [field]: value,
     });
   },
 
@@ -61,7 +66,7 @@ Page({
           })
         } else {
           wx.showToast({
-            title: '提交失败，请重试',
+            title: '提交失败，请检查是否有未填空格，或联系开发者',
             icon: 'none',
             duration: 2000
           })
@@ -117,52 +122,52 @@ Page({
                         if (res.statusCode == 200) {
                           const recentWorklog = res.data;
                           console.log('get_recent_worklog成功', recentWorklog);
-                          if(Object.keys(res.data).length === 0){
+                          if (Object.keys(res.data).length === 0) {
                             wx.showModal({
                               title: '提示',
                               content: '未获取到最近一次的记录，下次填报将自动获取',
                               showCancel: false
                             });
                             return;
+                          } else {
+                            that.setData({
+                              public_deposit_balance: recentWorklog.public_deposit_balance,
+                              public_deposit_day_increase: recentWorklog.public_deposit_day_increase,
+                              public_deposit_year_increase: recentWorklog.public_deposit_year_increase,
+                              public_deposit_change_detail: recentWorklog.public_deposit_change_detail,
+                              public_effective_account_balance: recentWorklog.public_effective_account_balance,
+                              public_effective_account_day_increase: recentWorklog.public_effective_account_day_increase,
+                              public_effective_account_base_increase: recentWorklog.public_effective_account_base_increase,
+                              public_effective_account_change_detail: recentWorklog.public_effective_account_change_detail,
+                              deposit_value_customer_balance: recentWorklog.deposit_value_customer_balance,
+                              deposit_value_customer_day_increase: recentWorklog.deposit_value_customer_day_increase,
+                              deposit_value_customer_base_increase: recentWorklog.deposit_value_customer_base_increase,
+                              deposit_value_customer_change_detail: recentWorklog.deposit_value_customer_change_detail,
+                              digital_currency_active_account_balance: recentWorklog.digital_currency_active_account_balance,
+                              digital_currency_active_account_day_increase: recentWorklog.digital_currency_active_account_day_increase,
+                              digital_currency_active_account_base_increase: recentWorklog.digital_currency_active_account_base_increase,
+                              digital_currency_active_account_change_detail: recentWorklog.digital_currency_active_account_change_detail,
+                              public_deposit_forecast: recentWorklog.public_deposit_forecast,
+                              public_deposit_forecast_year_increase: recentWorklog.public_deposit_forecast_year_increase,
+                              public_effective_account_forecast: recentWorklog.public_effective_account_forecast,
+                              public_effective_account_forecast_base_increase: recentWorklog.public_effective_account_forecast_base_increase,
+                              deposit_value_customer_forecast: recentWorklog.deposit_value_customer_forecast,
+                              deposit_value_customer_forecast_base_increase: recentWorklog.deposit_value_customer_forecast_base_increase,
+                              new_customer_visit_name: recentWorklog.new_customer_visit_name,
+                              new_customer_visit_position: recentWorklog.new_customer_visit_position,
+                              planning_customer_visit_name: recentWorklog.planning_customer_visit_name,
+                              planning_customer_visit_position: recentWorklog.planning_customer_visit_position,
+                              planning_customer_visit_matters: recentWorklog.planning_customer_visit_matters,
+                              other_customer_visit_name: recentWorklog.other_customer_visit_name,
+                              other_customer_visit_position: recentWorklog.other_customer_visit_position,
+                              other_customer_visit_matters: recentWorklog.other_customer_visit_matters,
+                              other_work: recentWorklog.other_work,
+                            });
                           }
-                          else{
-                          that.setData({
-                            public_deposit_balance: recentWorklog.public_deposit_balance ,
-                            public_deposit_day_increase: recentWorklog.public_deposit_day_increase ,
-                            public_deposit_year_increase: recentWorklog.public_deposit_year_increase ,
-                            public_deposit_change_detail: recentWorklog.public_deposit_change_detail ,
-                            public_effective_account_balance: recentWorklog.public_effective_account_balance ,
-                            public_effective_account_day_increase: recentWorklog.public_effective_account_day_increase,
-                            public_effective_account_base_increase: recentWorklog.public_effective_account_base_increase ,
-                            public_effective_account_change_detail: recentWorklog.public_effective_account_change_detail ,
-                            deposit_value_customer_balance: recentWorklog.deposit_value_customer_balance,
-                            deposit_value_customer_day_increase: recentWorklog.deposit_value_customer_day_increase ,
-                            deposit_value_customer_base_increase: recentWorklog.deposit_value_customer_base_increase ,
-                            deposit_value_customer_change_detail: recentWorklog.deposit_value_customer_change_detail ,
-                            digital_currency_active_account_balance: recentWorklog.digital_currency_active_account_balance ,
-                            digital_currency_active_account_day_increase: recentWorklog.digital_currency_active_account_day_increase ,
-                            digital_currency_active_account_base_increase: recentWorklog.digital_currency_active_account_base_increase ,
-                            digital_currency_active_account_change_detail: recentWorklog.digital_currency_active_account_change_detail ,
-                            public_deposit_forecast: recentWorklog.public_deposit_forecast ,
-                            public_deposit_forecast_year_increase: recentWorklog.public_deposit_forecast_year_increase,
-                            public_effective_account_forecast: recentWorklog.public_effective_account_forecast ,
-                            public_effective_account_forecast_base_increase: recentWorklog.public_effective_account_forecast_base_increase ,
-                            deposit_value_customer_forecast: recentWorklog.deposit_value_customer_forecast,
-                            deposit_value_customer_forecast_base_increase: recentWorklog.deposit_value_customer_forecast_base_increase ,
-                            new_customer_visit_name: recentWorklog.new_customer_visit_name ,
-                            new_customer_visit_position: recentWorklog.new_customer_visit_position ,
-                            planning_customer_visit_name: recentWorklog.planning_customer_visit_name,
-                            planning_customer_visit_position: recentWorklog.planning_customer_visit_position ,
-                            planning_customer_visit_matters: recentWorklog.planning_customer_visit_matters ,
-                            other_customer_visit_name: recentWorklog.other_customer_visit_name,
-                            other_customer_visit_position: recentWorklog.other_customer_visit_position ,
-                            other_customer_visit_matters: recentWorklog.other_customer_visit_matters ,
-                            other_work: recentWorklog.other_work,
-                          });}
                         } else {
                           // 处理错误情况
                         }
-                        
+
                       }
                     });
 
