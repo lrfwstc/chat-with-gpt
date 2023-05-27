@@ -15,5 +15,7 @@
       </picker>
     </view>
     <button formType='submit'>注册</button>
+    <text>由于服务器升级，已申请角色需重新申请</text>
   </form>
+  <text>由于服务器升级，已申请角色需重新申请</text>
 </view>

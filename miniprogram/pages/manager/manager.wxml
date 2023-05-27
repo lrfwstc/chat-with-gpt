@@ -1,7 +1,7 @@
 <view class="container">
   <view class="header">
     <text>姓名：{{manager_name}}</text>
-    <text> 日期：{{date}}</text>
+    <text>日期：{{date}}</text>
   </view>
   <!-- 对公存款 -->
   <view class="text-container">
@@ -19,7 +19,7 @@
     <input class="input-wan" type="text" value="{{public_deposit_year_increase}}" bindinput="handleInput" data-field="public_deposit_year_increase" />
     <text>万元。</text>
     <text>比上日单笔变动超500万元要列明细</text>
-    <input class="input" type="text" value="{{public_deposit_change_detail}}" bindinput="handleInput" data-field="public_deposit_change_detail" />
+    <input class="input" type="text" value="{{public_deposit_change_detail}}" bindinput="handleInput_n" data-field="public_deposit_change_detail" />
   </view>
   <!-- 对公有效户 -->
   <view class="text-container">
@@ -34,7 +34,7 @@
     <input class="input-hu" type="text" value="{{public_effective_account_base_increase}}" bindinput="handleInput" data-field="public_effective_account_base_increase" />
     <text>户。</text>
     <text>比上日变动明细说明</text>
-    <input class="input" type="text" value="{{public_effective_account_change_detail}}" bindinput="handleInput" data-field="public_effective_account_change_detail" />
+    <input class="input" type="text" value="{{public_effective_account_change_detail}}" bindinput="handleInput_n" data-field="public_effective_account_change_detail" />
   </view>
   <!-- 存款价值客户 -->
   <view class="text-container">
@@ -49,7 +49,7 @@
     <input class="input-hu" type="text" value="{{deposit_value_customer_base_increase}}" bindinput="handleInput" data-field="deposit_value_customer_base_increase" />
     <text>户。</text>
     <text>比上日变动明细说明</text>
-    <input class="input" type="text" value="{{deposit_value_customer_change_detail}}" bindinput="handleInput" data-field="deposit_value_customer_change_detail" />
+    <input class="input" type="text" value="{{deposit_value_customer_change_detail}}" bindinput="handleInput_n" data-field="deposit_value_customer_change_detail" />
   </view>
   <!-- 数币活户 -->
   <view class="text-container">
@@ -64,7 +64,7 @@
     <input class="input-hu" type="text" value="{{digital_currency_active_account_base_increase}}" bindinput="handleInput" data-field="digital_currency_active_account_base_increase" />
     <text>户。</text>
     <text>比上日变动明细说明</text>
-    <input class="input" type="text" value="{{digital_currency_active_account_change_detail}}" bindinput="handleInput" data-field="digital_currency_active_account_change_detail" />
+    <input class="input" type="text" value="{{digital_currency_active_account_change_detail}}" bindinput="handleInput_n" data-field="digital_currency_active_account_change_detail" />
   </view>
   <!-- 月末预测 -->
   <view class="text-container">
@@ -75,7 +75,7 @@
   </view>
   <view class="flex-container">
     <text>预测余额</text>
-    <input class="input-wan" type="text" value="{{public_deposit_forecast}}" bindinput="handleInput" data-field="public_deposit_forecast" />
+    <input class="input-wan" type="text" value="{{public_deposit_forecast_balance}}" bindinput="handleInput" data-field="public_deposit_forecast_balance" />
     <text>万元，比年初新增</text>
     <input class="input-wan" type="text" value="{{public_deposit_forecast_year_increase}}" bindinput="handleInput" data-field="public_deposit_forecast_year_increase" />
     <text>万元。</text>
@@ -108,38 +108,38 @@
     <text>1.新客户拜访: </text>
   </view>
   <view class="flex-container">
-    <text>公司名称</text>
-    <input class="input" type="text" value="{{new_customer_visit_name}}" bindinput="handleInput" data-field="new_customer_visit_name" />
+    <text>客户简称</text>
+    <input class="input" type="text" value="{{new_customer_visit_name}}" bindinput="handleInput_n" data-field="new_customer_visit_name" />
     <text>拜访客户的姓名职务</text>
-    <input class="input" type="text" value="{{new_customer_visit_position}}" bindinput="handleInput" data-field="new_customer_visit_position" />
+    <input class="input" type="text" value="{{new_customer_visit_position}}" bindinput="handleInput_n" data-field="new_customer_visit_position" />
   </view>
   <view class="text-container">
     <text>2.挂图作战客户拜访: </text>
   </view>
   <view class="flex-container">
-    <text>公司名称</text>
-    <input class="input" type="text" value="{{planning_customer_visit_name}}" bindinput="handleInput" data-field="planning_customer_visit_name" />
+    <text>客户简称</text>
+    <input class="input" type="text" value="{{chart_battle_customer_visit_name}}" bindinput="handleInput_n" data-field="planning_customer_visit_name" />
     <text>拜访客户的姓名职务</text>
-    <input class="input" type="text" value="{{planning_customer_visit_position}}" bindinput="handleInput" data-field="planning_customer_visit_position" />
+    <input class="input" type="text" value="{{chart_battle_customer_visit_position}}" bindinput="handleInput_n" data-field="planning_customer_visit_position" />
     <text>拜访事项</text>
-    <input class="input" type="text" value="{{planning_customer_visit_matters}}" bindinput="handleInput" data-field="planning_customer_visit_matters" />
+    <input class="input" type="text" value="{{chart_battle_customer_visit_matters}}" bindinput="handleInput_n" data-field="planning_customer_visit_matters" />
   </view>
   <view class="text-container">
     <text>3.其他客户拜访: </text>
   </view>
   <view class="flex-container">
-    <text>公司名称</text>
-    <input class="input" type="text" value="{{other_customer_visit_name}}" bindinput="handleInput" data-field="other_customer_visit_name" />
+    <text>客户简称</text>
+    <input class="input" type="text" value="{{other_customer_visit_name}}" bindinput="handleInput_n" data-field="other_customer_visit_name" />
     <text>拜访客户的姓名职务</text>
-    <input class="input" type="text" value="{{other_customer_visit_position}}" bindinput="handleInput" data-field="other_customer_visit_position" />
+    <input class="input" type="text" value="{{other_customer_visit_position}}" bindinput="handleInput_n" data-field="other_customer_visit_position" />
     <text>拜访事项</text>
-    <input class="input" type="text" value="{{other_customer_visit_matters}}" bindinput="handleInput" data-field="other_customer_visit_matters" />
+    <input class="input" type="text" value="{{other_customer_visit_matters}}" bindinput="handleInput_n" data-field="other_customer_visit_matters" />
   </view>
   <view class="text-container">
     <text>4.其他工作: </text>
   </view>
   <view class="flex-container">
-    <input class="input" type="text" value="{{other_work}}" bindinput="handleInput" data-field="other_work" />
+    <input class="input-big" type="text" value="{{other_work}}" bindinput="handleInput_n" data-field="other_work" />
   </view>
   <button bindtap="submitData">上传</button>
 </view>

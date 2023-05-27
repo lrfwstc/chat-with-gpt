@@ -2,4 +2,8 @@
 <view class="container">
   <text>您的 OpenID: {{openid}}</text>
   <text class="error">{{errorMsg}}</text>
+  <view>
+  <button bindtap="fetchLogFile">获取后端输出文件</button>
+  </view>
+
 </view>

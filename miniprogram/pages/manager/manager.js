@@ -20,7 +20,7 @@ Page({
     digital_currency_active_account_day_increase: '',
     digital_currency_active_account_base_increase: '',
     digital_currency_active_account_change_detail: '无',
-    public_deposit_forecast: '',
+    public_deposit_forecast_balance: '',
     public_deposit_forecast_year_increase: '',
     public_effective_account_forecast: '',
     public_effective_account_forecast_base_increase: '',
@@ -28,9 +28,9 @@ Page({
     deposit_value_customer_forecast_base_increase: '',
     new_customer_visit_name: '无',
     new_customer_visit_position: '无',
-    planning_customer_visit_name: '无',
-    planning_customer_visit_position: '无',
-    planning_customer_visit_matters: '无',
+    chart_battle_customer_visit_name: '无',
+    chart_battle_customer_visit_position: '无',
+    chart_battle_customer_visit_matters: '无',
     other_customer_visit_name: '无',
     other_customer_visit_position: '无',
     other_customer_visit_matters: '无',
@@ -41,15 +41,21 @@ Page({
   handleInput: function(e) {
     const { field } = e.currentTarget.dataset;
     let value = e.detail.value;
-
-    // 只保留数字和负号，其他字符替换为空字符串
-    value = value.replace(/[^\d-]/g, '');
-
+  
+    // 只保留数字、负号和小数点，其他字符替换为空字符串
+    value = value.replace(/[^\d.-]/g, '');
+  
     this.setData({
       [field]: value,
     });
-  },
+  },  
 
+  handleInput_n: function(e) {
+    const { field } = e.currentTarget.dataset;
+    this.setData({
+      [field]: e.detail.value,
+    });
+  },
   // 提交数据
   submitData: function() {
     // 这里的代码需要调用 API 向服务器发送数据
@@ -65,8 +71,9 @@ Page({
             duration: 2000
           })
         } else {
+          console.log('submit失败', this.data);
           wx.showToast({
-            title: '提交失败，请检查是否有未填空格，或联系开发者',
+            title: '提交失败，请联系开发者',
             icon: 'none',
             duration: 2000
           })
@@ -147,7 +154,7 @@ Page({
                               digital_currency_active_account_day_increase: recentWorklog.digital_currency_active_account_day_increase,
                               digital_currency_active_account_base_increase: recentWorklog.digital_currency_active_account_base_increase,
                               digital_currency_active_account_change_detail: recentWorklog.digital_currency_active_account_change_detail,
-                              public_deposit_forecast: recentWorklog.public_deposit_forecast,
+                              public_deposit_forecast_balance: recentWorklog.public_deposit_forecast_balance,
                               public_deposit_forecast_year_increase: recentWorklog.public_deposit_forecast_year_increase,
                               public_effective_account_forecast: recentWorklog.public_effective_account_forecast,
                               public_effective_account_forecast_base_increase: recentWorklog.public_effective_account_forecast_base_increase,
@@ -155,9 +162,9 @@ Page({
                               deposit_value_customer_forecast_base_increase: recentWorklog.deposit_value_customer_forecast_base_increase,
                               new_customer_visit_name: recentWorklog.new_customer_visit_name,
                               new_customer_visit_position: recentWorklog.new_customer_visit_position,
-                              planning_customer_visit_name: recentWorklog.planning_customer_visit_name,
-                              planning_customer_visit_position: recentWorklog.planning_customer_visit_position,
-                              planning_customer_visit_matters: recentWorklog.planning_customer_visit_matters,
+                              chart_battle_customer_visit_name: recentWorklog.chart_battle_customer_visit_name,
+                              chart_battle_customer_visit_position: recentWorklog.chart_battle_customer_visit_position,
+                              chart_battle_customer_visit_matters: recentWorklog.chart_battle_customer_visit_matters,
                               other_customer_visit_name: recentWorklog.other_customer_visit_name,
                               other_customer_visit_position: recentWorklog.other_customer_visit_position,
                               other_customer_visit_matters: recentWorklog.other_customer_visit_matters,

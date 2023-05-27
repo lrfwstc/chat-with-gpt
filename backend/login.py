@@ -4,10 +4,14 @@
 from flask import Flask, request, jsonify, send_file, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.urls import url_quote
-
+from docx import Document
+import tempfile
 import datetime
 import pandas as pd
 import io
+import os
+import threading
+import string
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:bdthznb666@172.17.0.2/wechat_app'
@@ -33,15 +37,15 @@ class Worklog(db.Model):
     public_deposit_day_increase = db.Column(db.Integer)
     public_deposit_year_increase = db.Column(db.Integer)
     public_deposit_change_detail = db.Column(db.Text)
-    public_effective_account = db.Column(db.Integer)
+    public_effective_account_balance = db.Column(db.Integer)
     public_effective_account_day_increase = db.Column(db.Integer)
     public_effective_account_base_increase = db.Column(db.Integer)
     public_effective_account_change_detail = db.Column(db.Text)
-    deposit_value_customer = db.Column(db.Integer)
+    deposit_value_customer_balance = db.Column(db.Integer)
     deposit_value_customer_day_increase = db.Column(db.Integer)
     deposit_value_customer_base_increase = db.Column(db.Integer)
     deposit_value_customer_change_detail = db.Column(db.Text)
-    digital_currency_active_account = db.Column(db.Integer)
+    digital_currency_active_account_balance = db.Column(db.Integer)
     digital_currency_active_account_day_increase = db.Column(db.Integer)
     digital_currency_active_account_base_increase = db.Column(db.Integer)
     digital_currency_active_account_change_detail = db.Column(db.Text)
@@ -78,14 +82,18 @@ def export_worklog():
     # 将这些数据转换为一个pandas DataFrame
     data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
 
+    # Convert the 'date' column to string format
+    data['date'] = data['date'].apply(lambda x: x.strftime('%Y-%m-%d') if pd.notnull(x) else '')
+
+
 
     # 显式地指定列的顺序
     columns_order = ['id', 'wechat_id', 'date', 'name', 'public_deposit_balance', 'public_deposit_day_increase', 
-                     'public_deposit_year_increase', 'public_deposit_change_detail', 'public_effective_account',
+                     'public_deposit_year_increase', 'public_deposit_change_detail', 'public_effective_account_balance',
                      'public_effective_account_day_increase', 'public_effective_account_base_increase', 
-                     'public_effective_account_change_detail', 'deposit_value_customer',
+                     'public_effective_account_change_detail', 'deposit_value_customer_balance',
                      'deposit_value_customer_day_increase', 'deposit_value_customer_base_increase', 
-                     'deposit_value_customer_change_detail', 'digital_currency_active_account',
+                     'deposit_value_customer_change_detail', 'digital_currency_active_account_balance',
                      'digital_currency_active_account_day_increase', 'digital_currency_active_account_base_increase',
                      'digital_currency_active_account_change_detail', 'forecast_public_deposit_balance',
                      'forecast_public_deposit_year_increase', 'forecast_public_effective_account',
@@ -112,15 +120,15 @@ def export_worklog():
         'public_deposit_day_increase': '存款日增量',
         'public_deposit_year_increase': '存款年增量',
         'public_deposit_change_detail': '存款变动明细',
-        'public_effective_account': '有效户',
+        'public_effective_account_balance': '有效户',
         'public_effective_account_day_increase': '有效户日增量',
         'public_effective_account_base_increase': '有效户年增量',
         'public_effective_account_change_detail': '有效户变动明细',
-        'deposit_value_customer': '存款价值客户',
+        'deposit_value_customer_balance': '存款价值客户',
         'deposit_value_customer_day_increase': '存款价值客户日增量',
         'deposit_value_customer_base_increase': '存款价值客户年增量',
         'deposit_value_customer_change_detail': '存款价值客户变动明细',
-        'digital_currency_active_account': '数币活户',
+        'digital_currency_active_account_balance': '数币活户',
         'digital_currency_active_account_day_increase': '数币活户日增量',
         'digital_currency_active_account_base_increase': '数币活户年增量',
         'digital_currency_active_account_change_detail': '数币活户变动明细',
@@ -163,19 +171,19 @@ def add_worklog():
         public_deposit_day_increase=worklog_info['public_deposit_day_increase'],
         public_deposit_year_increase=worklog_info['public_deposit_year_increase'],
         public_deposit_change_detail=worklog_info['public_deposit_change_detail'],
-        public_effective_account=worklog_info['public_effective_account_balance'],
+        public_effective_account_balance=worklog_info['public_effective_account_balance'],
         public_effective_account_day_increase=worklog_info['public_effective_account_day_increase'],
         public_effective_account_base_increase=worklog_info['public_effective_account_base_increase'],
         public_effective_account_change_detail=worklog_info['public_effective_account_change_detail'],
-        deposit_value_customer=worklog_info['deposit_value_customer_balance'],
+        deposit_value_customer_balance=worklog_info['deposit_value_customer_balance'],
         deposit_value_customer_day_increase=worklog_info['deposit_value_customer_day_increase'],
         deposit_value_customer_base_increase=worklog_info['deposit_value_customer_base_increase'],
         deposit_value_customer_change_detail=worklog_info['deposit_value_customer_change_detail'],
-        digital_currency_active_account=worklog_info['digital_currency_active_account_balance'],
+        digital_currency_active_account_balance=worklog_info['digital_currency_active_account_balance'],
         digital_currency_active_account_day_increase=worklog_info['digital_currency_active_account_day_increase'],
         digital_currency_active_account_base_increase=worklog_info['digital_currency_active_account_base_increase'],
         digital_currency_active_account_change_detail=worklog_info['digital_currency_active_account_change_detail'],
-        forecast_public_deposit_balance=worklog_info['public_deposit_forecast'],
+        forecast_public_deposit_balance=worklog_info['public_deposit_forecast_balance'],
         forecast_public_deposit_year_increase=worklog_info['public_deposit_forecast_year_increase'],
         forecast_public_effective_account=worklog_info['public_effective_account_forecast'],
         forecast_public_effective_account_base_increase=worklog_info['public_effective_account_forecast_base_increase'],
@@ -183,9 +191,9 @@ def add_worklog():
         forecast_deposit_value_customer_base_increase=worklog_info['deposit_value_customer_forecast_base_increase'],
         new_customer_visit_name=worklog_info['new_customer_visit_name'],
         new_customer_visit_position=worklog_info['new_customer_visit_position'],
-        chart_battle_customer_visit_name=worklog_info['planning_customer_visit_name'],
-        chart_battle_customer_visit_position=worklog_info['planning_customer_visit_position'],
-        chart_battle_customer_visit_matters=worklog_info['planning_customer_visit_matters'],
+        chart_battle_customer_visit_name=worklog_info['chart_battle_customer_visit_name'],
+        chart_battle_customer_visit_position=worklog_info['chart_battle_customer_visit_position'],
+        chart_battle_customer_visit_matters=worklog_info['chart_battle_customer_visit_matters'],
         other_customer_visit_name=worklog_info['other_customer_visit_name'],
         other_customer_visit_position=worklog_info['other_customer_visit_position'],
         other_customer_visit_matters=worklog_info['other_customer_visit_matters'],
@@ -210,19 +218,19 @@ def get_recent_worklog():
             'public_deposit_day_increase': recent_worklog.public_deposit_day_increase,
             'public_deposit_year_increase': recent_worklog.public_deposit_year_increase,
             'public_deposit_change_detail': recent_worklog.public_deposit_change_detail,
-            'public_effective_account_balance': recent_worklog.public_effective_account,
+            'public_effective_account_balance': recent_worklog.public_effective_account_balance,
             'public_effective_account_day_increase': recent_worklog.public_effective_account_day_increase,
             'public_effective_account_base_increase': recent_worklog.public_effective_account_base_increase,
             'public_effective_account_change_detail': recent_worklog.public_effective_account_change_detail,
-            'deposit_value_customer_balance': recent_worklog.deposit_value_customer,
+            'deposit_value_customer_balance': recent_worklog.deposit_value_customer_balance,
             'deposit_value_customer_day_increase': recent_worklog.deposit_value_customer_day_increase,
             'deposit_value_customer_base_increase': recent_worklog.deposit_value_customer_base_increase,
             'deposit_value_customer_change_detail': recent_worklog.deposit_value_customer_change_detail,
-            'digital_currency_active_account_balance': recent_worklog.digital_currency_active_account,
+            'digital_currency_active_account_balance': recent_worklog.digital_currency_active_account_balance,
             'digital_currency_active_account_day_increase': recent_worklog.digital_currency_active_account_day_increase,
             'digital_currency_active_account_base_increase': recent_worklog.digital_currency_active_account_base_increase,
             'digital_currency_active_account_change_detail': recent_worklog.digital_currency_active_account_change_detail,
-            'public_deposit_forecast': recent_worklog.forecast_public_deposit_balance,
+            'public_deposit_forecast_balance': recent_worklog.forecast_public_deposit_balance,
             'public_deposit_forecast_year_increase': recent_worklog.forecast_public_deposit_year_increase,
             'public_effective_account_forecast': recent_worklog.forecast_public_effective_account,
             'public_effective_account_forecast_base_increase': recent_worklog.forecast_public_effective_account_base_increase,
@@ -324,6 +332,32 @@ def register():
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully'})
+
+@app.route('/api/get_log_file', methods=['GET'])
+def get_log_file():
+    # 读取nohup.out文件
+    with open('/root/wechat_project/nohup.out', 'r') as file:
+        data = file.read()
+
+    # 创建一个转换表，只保留兼容的字符
+    cleaned_data = ''.join(ch for ch in data if ch.isprintable() and ch != '\n' and ch != '\r')
+
+    # 将清洗后的数据转换为.docx文件
+    doc = Document()
+    doc.add_paragraph(cleaned_data)
+    doc.save('/tmp/nohup.docx')
+
+    # 创建一个定时器，5分钟后删除.docx文件
+    threading.Timer(300, delete_file, args=('/tmp/nohup.docx',)).start()
+
+    # 返回.docx文件
+    return send_file('/tmp/nohup.docx', as_attachment=True, attachment_filename='nohup.docx', mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+
+def delete_file(path):
+    if os.path.exists(path):
+        os.remove(path)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8001, debug=True)

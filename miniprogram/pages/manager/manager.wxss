@@ -71,6 +71,15 @@ text {
     margin-bottom: 20rpx;
 }
 
+.input-big {
+    height: 20rpx;
+    border: 1px solid #ccc;
+    padding: 0rpx;
+    width: 700rpx;
+    margin: 0rpx;
+    margin-bottom: 20rpx;
+}
+
 .button {
     height: 80rpx;
     line-height: 80rpx;

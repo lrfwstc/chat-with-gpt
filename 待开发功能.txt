@@ -1,4 +1,4 @@
 admin功能：xls按周统计、增加科长、二支行长角色权限
-manager功能：
+manager功能：删除自己已报送数据
 manager防呆：同一人单日重复上传报错
 login功能：

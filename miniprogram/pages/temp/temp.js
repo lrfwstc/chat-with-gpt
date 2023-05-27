@@ -30,5 +30,32 @@ Page({
         
       }
     });
+  },
+
+  fetchLogFile: function() {
+    wx.downloadFile({
+      url: 'https://wendaoxiansheng.com/api/get_log_file', 
+      success: function(res) {
+        if (res.statusCode == 200) {
+          // 文件已成功下载，可以在此处添加代码处理文件...
+          console.log('下载文件成功', res)
+          wx.openDocument({
+            filePath: res.tempFilePath,
+            success: function (res) {
+              console.log('打开文档成功')
+            },
+            fail: function(res) {
+              // 请求失败，可以在此处添加代码处理错误...
+              console.log('打开文件失败', res)
+            }
+          })
+        }
+      },
+      fail: function(res) {
+        // 请求失败，可以在此处添加代码处理错误...
+        console.log('下载文件失败', res)
+      }
+    })
   }
+
 });
