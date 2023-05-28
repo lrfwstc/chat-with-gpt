@@ -65,11 +65,24 @@ Page({
       data: this.data,
       success(res) {
         if (res.statusCode == 200) {
-          wx.showToast({
-            title: '提交成功',
-            icon: 'success',
-            duration: 2000
-          })
+          if (res.data.message == 'New data has overwritten old data') {
+            // 这里处理新数据覆盖旧数据的情况
+            console.log('New data has overwritten old data');
+            wx.showToast({
+              title: '提交成功，已覆盖当日旧数据',
+              icon: 'success',
+              duration: 2000
+            })
+          } else {
+            // 这里处理新数据被添加的情况
+            console.log('New data has been added');
+            wx.showToast({
+              title: '提交成功',
+              icon: 'success',
+              duration: 2000
+            })
+          }
+          
         } else {
           console.log('submit失败', this.data);
           wx.showToast({

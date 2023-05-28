@@ -4,7 +4,8 @@ Page({
 	  showRegisterForm: false,
 	  roleIndex: -1,  // 添加一个新的属性来保存角色的索引
       roles: ['对公客户经理', '小微客户经理', '管理员','游客'],  // 添加一个数组来保存所有的角色
-      backroles: ['preManager', 'preminManager', 'preAdmin','preVisitor'] 
+	  backroles: ['preManager', 'preminManager', 'preAdmin','preVisitor'] ,
+	  role: ''
   
 	},
 	onLoad: function() {
@@ -38,7 +39,7 @@ Page({
 					if (res.statusCode == 200) {
 					  let role = res.data.role;
 					  // 如果用户已注册，根据角色跳转到相应页面
-					  if (role === 'Manager' || role === 'Admin' || role === 'minManager' || role === 'Visitor') {
+					   if (role === 'Manager' || role === 'Admin' || role === 'minManager' || role === 'Visitor'|| role === 'Developer') {
 						wx.redirectTo({
 						  url: '/pages/index/index'
 						});
@@ -118,6 +119,7 @@ Page({
               });
 		}
 	  });
-	}
+	},
+	
   });
   

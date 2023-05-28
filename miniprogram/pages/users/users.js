@@ -60,8 +60,6 @@ Page({
       }
     });
   },
-  
-
 
   deleteUser: function(event) {
     const id = event.currentTarget.dataset.id;

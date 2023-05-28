@@ -11,7 +11,16 @@
         选择结束日期：{{endDate}}
       </view>
     </picker>
-  
   <button bindtap="downloadWorklog">下载工作日志</button>
+  </view>
+  <view class="views">
+    <picker mode="date" start="2020-01-01" end="{{date}}" bindchange="bindOneDateChange">
+      <view class="picker">
+        选择日期：{{oneDate}}
+      </view>
+    </picker>
+  <button bindtap="priority">当日重点工作</button>
+  <button bindtap="effective_account">当日有效户</button>
+  <button bindtap="client_visit">当日营销推进</button>
   </view>
 </view>

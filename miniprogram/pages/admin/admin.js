@@ -3,16 +3,21 @@ Page({
     users: [],
     date: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    oneDate: ''
   },
-    onLoad: function() {
-      //this.getUsers();
-      const date = new Date();
-      const formattedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-      this.setData({
-        date: formattedDate
-      }); 
-    },
+  onLoad: function() {
+    //this.getUsers();
+    const date = new Date();
+    const formattedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+    this.setData({
+      date: formattedDate,
+      startDate: formattedDate,
+      endDate: formattedDate,
+      oneDate: formattedDate
+    }); 
+  },
+  
     bindStartDateChange: function(e) {
       console.log('开始日期发送选择改变，携带值为', e.detail.value)
       this.setData({
@@ -23,6 +28,12 @@ Page({
       console.log('结束日期发送选择改变，携带值为', e.detail.value)
       this.setData({
         endDate: e.detail.value
+      })
+    },
+    bindOneDateChange: function(e) {
+      console.log('单一日期发送选择改变，携带值为', e.detail.value)
+      this.setData({
+        oneDate: e.detail.value
       })
     },
     getUsers: function() {
@@ -69,7 +80,58 @@ Page({
             })
           },
         })
-      },  
+      },
+      
+      priority: function() {
+        wx.downloadFile({
+          url: `https://wendaoxiansheng.com/api/export_worklog_priority?oneDate=${this.data.oneDate}`, 
+          success: function(res) {
+            var filePath = res.tempFilePath
+            wx.openDocument({
+              showMenu:true,
+              filePath: filePath,
+              fileType: 'xlsx',
+              success: function(res) {
+                console.log('打开文档成功')
+              },
+            })
+          },
+        })
+      },
+
+      effective_account: function() {
+        wx.downloadFile({
+          url: `https://wendaoxiansheng.com/api/export_worklog_effective_account?oneDate=${this.data.oneDate}`, 
+          success: function(res) {
+            var filePath = res.tempFilePath
+            wx.openDocument({
+              showMenu:true,
+              filePath: filePath,
+              fileType: 'xlsx',
+              success: function(res) {
+                console.log('打开文档成功')
+              },
+            })
+          },
+        })
+      },
+
+      client_visit: function() {
+        wx.downloadFile({
+          url: `https://wendaoxiansheng.com/api/export_worklog_client_visit?oneDate=${this.data.oneDate}`, 
+          success: function(res) {
+            var filePath = res.tempFilePath
+            wx.openDocument({
+              showMenu:true,
+              filePath: filePath,
+              fileType: 'xlsx',
+              success: function(res) {
+                console.log('打开文档成功')
+              },
+            })
+          },
+        })
+      },
        
   });
   

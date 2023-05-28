@@ -25,7 +25,7 @@ class User(db.Model):
     __tablename__ = 'User'
     wechat_id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('Manager','Admin','minManager','Visitor','preManager','preminManager','preAdmin','preVisitor'), nullable=False)
+    role = db.Column(db.Enum('Manager','Admin','minManager','Visitor','preManager','preminManager','preAdmin','preVisitor','Developer'), nullable=False)
 
 class Worklog(db.Model):
     __tablename__ = 'Worklog'
@@ -84,8 +84,6 @@ def export_worklog():
 
     # Convert the 'date' column to string format
     data['date'] = data['date'].apply(lambda x: x.strftime('%Y-%m-%d') if pd.notnull(x) else '')
-
-
 
     # 显式地指定列的顺序
     columns_order = ['id', 'wechat_id', 'date', 'name', 'public_deposit_balance', 'public_deposit_day_increase', 
@@ -149,21 +147,299 @@ def export_worklog():
         'other_work': '其他工作'
     })
 
+    def custom_len(s):
+        length = 0
+        for char in s:
+            if '\u4e00' <= char <= '\u9fff':  # 判断是否为中文字符
+                length += 2
+            else:
+                length += 1
+        return length
 
     # 创建一个Excel文件
     excel_file = io.BytesIO()
     with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-        data.to_excel(writer, sheet_name='Sheet1', index=False)  # 不要把索引写入到Excel文件中
-        
+        data.to_excel(writer, sheet_name='Sheet1', index=False)
+        worksheet = writer.sheets['Sheet1']
+
+        # 创建一个格式对象，用于设置单元格的对齐方式
+        cell_format = writer.book.add_format()
+        cell_format.set_align('left')  # 设置单元格为左对齐
+
+        for idx, col in enumerate(data):
+            series = data[col]
+            max_len = max((
+                series.astype(str).map(custom_len).max(),
+                custom_len(str(series.name))
+            ))
+            max_len = max_len * 1 + 1
+
+            # 使用set_column方法设置列的宽度和对齐方式
+            # 注意这里设置的行范围从1开始，以避开第一行（标题行）
+            worksheet.set_column(idx, idx, max_len, cell_format)
+
     excel_file.seek(0)
-    
-    # 将这个Excel文件作为响应的一部分返回给客户端
+
     return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog.xlsx')
- 
+
+
+@app.route('/api/export_worklog_priority', methods=['GET'])
+def export_worklog_priority():
+    date_str = request.args.get('oneDate')
+
+    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+
+    if target_date:
+        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    else:
+        return "No date provided."
+
+    # 将这些数据转换为一个pandas DataFrame
+    data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
+
+    # 只选择你需要的列
+    columns_needed = ['name', 'public_deposit_balance', 'public_deposit_day_increase', 'public_deposit_year_increase', 'public_deposit_change_detail']
+    data = data[columns_needed]
+
+    # 对数据根据'public_deposit_day_increase'进行降序排列
+    data = data.sort_values('public_deposit_day_increase', ascending=False)
+
+    # 重命名列
+    data = data.rename(columns={
+        'name': '姓名',
+        'public_deposit_balance': '存款余额',
+        'public_deposit_day_increase': '存款日增量',
+        'public_deposit_year_increase': '存款年增量',
+        'public_deposit_change_detail': '存款变动明细',
+    })
+
+    def custom_len(s):
+        length = 0
+        for char in s:
+            if '\u4e00' <= char <= '\u9fff':  # 判断是否为中文字符
+                length += 2
+            else:
+                length += 1
+        return length
+
+    # 创建一个Excel文件
+    excel_file = io.BytesIO()
+    with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+        data.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1)
+        worksheet = writer.sheets['Sheet1']
+
+        # 创建一个格式对象，用于设置单元格的对齐方式
+        cell_format = writer.book.add_format()
+        cell_format.set_align('left')  # 设置单元格为左对齐
+
+        for idx, col in enumerate(data):
+            series = data[col]
+            max_len = max((
+                series.astype(str).map(custom_len).max(),
+                custom_len(str(series.name))
+            ))
+            max_len = max_len * 1 + 1
+
+            # 使用set_column方法设置列的宽度和对齐方式
+            # 注意这里设置的行范围从1开始，以避开第一行（标题行）
+            worksheet.set_column(idx, idx, max_len, cell_format)
+
+        # 添加标题行，合并1-5列单元格并居中显示
+        title = date_str + " " + "重点工作"
+        title_format = writer.book.add_format({
+        'align': 'center',
+        'bold': True,
+        'font_size': 14,
+        'border': 1
+        })
+        worksheet.merge_range('A1:E1', title, title_format)
+
+    excel_file.seek(0)
+
+    return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog.xlsx')
+
+
+@app.route('/api/export_worklog_effective_account', methods=['GET'])
+def export_worklog_effective_account():
+    date_str = request.args.get('oneDate')
+
+    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+
+    if target_date:
+        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    else:
+        return "No date provided."
+
+    # 将这些数据转换为一个pandas DataFrame
+    data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
+
+    # 只选择你需要的列
+    columns_needed = ['name', 'public_effective_account_balance', 'public_effective_account_day_increase', 'public_effective_account_base_increase', 'public_effective_account_change_detail']
+    data = data[columns_needed]
+
+    # 对数据根据'effective_account_day_increase'进行降序排列
+    data = data.sort_values('public_effective_account_day_increase', ascending=False)
+
+    # 重命名列
+    data = data.rename(columns={
+        'name': '姓名',
+        'public_effective_account_balance': '有效户',
+        'public_effective_account_day_increase': '有效户日增量',
+        'public_effective_account_base_increase': '有效户年增量',
+        'public_effective_account_change_detail': '有效户变动明细',
+    })
+
+    def custom_len(s):
+        length = 0
+        for char in s:
+            if '\u4e00' <= char <= '\u9fff':  # 判断是否为中文字符
+                length += 2
+            else:
+                length += 1
+        return length
+
+    # 创建一个Excel文件
+    excel_file = io.BytesIO()
+    with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+        data.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1)
+        worksheet = writer.sheets['Sheet1']
+
+        # 创建一个格式对象，用于设置单元格的对齐方式
+        cell_format = writer.book.add_format()
+        cell_format.set_align('left')  # 设置单元格为左对齐
+
+        for idx, col in enumerate(data):
+            series = data[col]
+            max_len = max((
+                series.astype(str).map(custom_len).max(),
+                custom_len(str(series.name))
+            ))
+            max_len = max_len * 1 + 1
+
+            # 使用set_column方法设置列的宽度和对齐方式
+            # 注意这里设置的行范围从1开始，以避开第一行（标题行）
+            worksheet.set_column(idx, idx, max_len, cell_format)
+
+        # 添加标题行，合并1-5列单元格并居中显示
+        title = date_str + " " + "有效户"
+        title_format = writer.book.add_format({
+        'align': 'center',
+        'bold': True,
+        'font_size': 14,
+        'border': 1
+        })
+        worksheet.merge_range('A1:E1', title, title_format)
+
+    excel_file.seek(0)
+
+    return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_effective_account.xlsx')
+
+
+@app.route('/api/export_worklog_client_visit', methods=['GET'])
+def export_worklog_client_visit():
+    date_str = request.args.get('oneDate')
+
+    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+
+    if target_date:
+        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    else:
+        return "No date provided."
+
+    # 将这些数据转换为一个pandas DataFrame
+    data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
+
+    # 只选择你需要的列
+    columns_needed = ['name', 'new_customer_visit_name', 'chart_battle_customer_visit_name', 'chart_battle_customer_visit_matters', 'other_customer_visit_name', 'other_customer_visit_matters']
+    data = data[columns_needed]
+
+    # 重命名列
+    data = data.rename(columns={
+        'name': '姓名',
+        'new_customer_visit_name': '新户名称',
+        'chart_battle_customer_visit_name': '挂图作战名称',
+        'chart_battle_customer_visit_matters': '详情',
+        'other_customer_visit_name': '其他客户名称',
+        'other_customer_visit_matters': '其他客户详情',
+    })
+
+    def custom_len(s):
+        length = 0
+        for char in s:
+            if '\u4e00' <= char <= '\u9fff':  # 判断是否为中文字符
+                length += 2
+            else:
+                length += 1
+        return length
+
+    # 创建一个Excel文件
+    excel_file = io.BytesIO()
+    with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+        data.to_excel(writer, sheet_name='Sheet1', index=False, startrow=1)
+        worksheet = writer.sheets['Sheet1']
+
+        # 创建一个格式对象，用于设置单元格的对齐方式和字体大小
+        cell_format = writer.book.add_format()
+        cell_format.set_align('left')  # 设置单元格为左对齐
+        cell_format.set_font_size(8)  # 将字体大小设置为8
+
+        for idx, col in enumerate(data):
+            series = data[col]
+            max_len = max((
+                series.astype(str).map(custom_len).max(),
+                custom_len(str(series.name))
+            ))
+            max_len = max_len * 0.7  # 将列宽缩小为原来的0.55倍
+
+            # 使用set_column方法设置列的宽度、对齐方式和字体大小
+            worksheet.set_column(idx, idx, max_len, cell_format)
+
+        # 设置行高
+        worksheet.set_default_row(15)  # 将行高设置为15，这个值可能需要根据你的实际需求进行调整
+
+        # 添加标题行，合并1-6列单元格并居中显示
+        title = date_str + " " + "客户拜访工作"
+        title_format = writer.book.add_format({
+            'align': 'center',
+            'bold': True,
+            'font_size': 8,  # 将标题行的字体大小设置为7
+            'border': 1  # 添加边框
+        })
+        worksheet.merge_range('A1:F1', title, title_format)
+
+        # 创建一个新的格式对象，用于设置列标题的字体大小
+        header_format = writer.book.add_format({
+            'font_size': 8,  # 将列标题的字体大小设置为7
+            'bold': True,
+            'align': 'center',
+            'border': 1 
+        })
+
+        # 将新的格式应用到列标题
+        for idx, col in enumerate(data.columns):
+            worksheet.write(1, idx, col, header_format)
+
+    excel_file.seek(0)
+
+    return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_client_visit.xlsx')
+
+
 
 @app.route('/api/add_worklog', methods=['POST'])
 def add_worklog():
     worklog_info = request.json
+
+    # 查询数据库是否有相同name和date的数据
+    old_worklog = Worklog.query.filter_by(
+        name=worklog_info['manager_name'], 
+        date=worklog_info['date']
+    ).first()
+
+    # 如果找到匹配的数据，删除它
+    if old_worklog:
+        db.session.delete(old_worklog)
+        db.session.commit()
+
     new_worklog = Worklog(
         wechat_id=worklog_info['openid'],
         date=worklog_info['date'],
@@ -203,7 +479,11 @@ def add_worklog():
     db.session.add(new_worklog)
     db.session.commit()
 
-    return jsonify({'status': 'success'})
+    # 如果旧的数据被覆盖，返回一个特定的消息
+    if old_worklog:
+        return jsonify({'status': 'success', 'message': 'New data has overwritten old data'})
+    else:
+        return jsonify({'status': 'success', 'message': 'New data has been added'})
 
 @app.route('/api/get_recent_worklog', methods=['POST'])
 def get_recent_worklog():
