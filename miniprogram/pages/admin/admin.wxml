@@ -14,9 +14,14 @@
   <button bindtap="downloadWorklog">下载工作日志</button>
   </view>
   <view class="views">
-    <picker mode="date" start="2020-01-01" end="{{date}}" bindchange="bindOneDateChange">
+    <picker mode="date" start="2020-01-01" end="{{date}}" bindchange="bindOneStartDateChange">
       <view class="picker">
-        选择日期：{{oneDate}}
+        选择开始日期：{{onestartDate}}
+      </view>
+    </picker>
+    <picker mode="date" start="{{onestartDate}}" end="{{date}}" bindchange="bindOneEndDateChange">
+      <view class="picker">
+        选择结束日期：{{oneendDate}}
       </view>
     </picker>
   <button bindtap="priority">当日重点工作</button>

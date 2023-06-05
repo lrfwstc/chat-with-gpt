@@ -112,6 +112,8 @@
     <input class="input" type="text" value="{{new_customer_visit_name}}" bindinput="handleInput_n" data-field="new_customer_visit_name" />
     <text>拜访客户的姓名职务</text>
     <input class="input" type="text" value="{{new_customer_visit_position}}" bindinput="handleInput_n" data-field="new_customer_visit_position" />
+    <text>拜访事项</text>
+    <input class="input" type="text" value="{{new_customer_visit_matters}}" bindinput="handleInput_n" data-field="new_customer_visit_matters" />
   </view>
   <view class="text-container">
     <text>2.挂图作战客户拜访: </text>

@@ -4,7 +4,8 @@ Page({
     date: '',
     startDate: '',
     endDate: '',
-    oneDate: ''
+    onestartDate: '',
+    oneendDate: ''
   },
   onLoad: function() {
     //this.getUsers();
@@ -14,7 +15,8 @@ Page({
       date: formattedDate,
       startDate: formattedDate,
       endDate: formattedDate,
-      oneDate: formattedDate
+      onestartDate: formattedDate,
+      oneendDate: formattedDate
     }); 
   },
   
@@ -30,10 +32,16 @@ Page({
         endDate: e.detail.value
       })
     },
-    bindOneDateChange: function(e) {
+    bindOneStartDateChange: function(e) {
       console.log('单一日期发送选择改变，携带值为', e.detail.value)
       this.setData({
-        oneDate: e.detail.value
+        onestartDate: e.detail.value
+      })
+    },
+    bindOneEndDateChange: function(e) {
+      console.log('单一日期发送选择改变，携带值为', e.detail.value)
+      this.setData({
+        oneendDate: e.detail.value
       })
     },
     getUsers: function() {
@@ -84,7 +92,7 @@ Page({
       
       priority: function() {
         wx.downloadFile({
-          url: `https://wendaoxiansheng.com/api/export_worklog_priority?oneDate=${this.data.oneDate}`, 
+          url: `https://wendaoxiansheng.com/api/export_worklog_priority?startDate=${this.data.onestartDate}&endDate=${this.data.oneendDate}`, 
           success: function(res) {
             var filePath = res.tempFilePath
             wx.openDocument({
@@ -101,7 +109,7 @@ Page({
 
       effective_account: function() {
         wx.downloadFile({
-          url: `https://wendaoxiansheng.com/api/export_worklog_effective_account?oneDate=${this.data.oneDate}`, 
+          url: `https://wendaoxiansheng.com/api/export_worklog_effective_account?startDate=${this.data.onestartDate}&endDate=${this.data.oneendDate}`, 
           success: function(res) {
             var filePath = res.tempFilePath
             wx.openDocument({
@@ -118,7 +126,7 @@ Page({
 
       client_visit: function() {
         wx.downloadFile({
-          url: `https://wendaoxiansheng.com/api/export_worklog_client_visit?oneDate=${this.data.oneDate}`, 
+          url: `https://wendaoxiansheng.com/api/export_worklog_client_visit?startDate=${this.data.onestartDate}&endDate=${this.data.oneendDate}`, 
           success: function(res) {
             var filePath = res.tempFilePath
             wx.openDocument({

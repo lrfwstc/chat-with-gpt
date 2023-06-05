@@ -15,7 +15,7 @@
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view> -->
-  <text class="anno">版本号：1.1.7</text>
+  <text class="anno">版本号：1.3.0</text>
   <view class="usermotto">
     <button class="user-motto" bindtap="navigateTo" data-pages="xsdyd"> 线上抵押贷 </button>
     <button class="user-motto" bindtap="navigateTo" data-pages="puhuiedai"> 普惠e贷 </button>

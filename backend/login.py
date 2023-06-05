@@ -57,6 +57,7 @@ class Worklog(db.Model):
     forecast_deposit_value_customer_base_increase = db.Column(db.Integer)
     new_customer_visit_name = db.Column(db.Text)
     new_customer_visit_position = db.Column(db.Text)
+    new_customer_visit_matters = db.Column(db.Text)
     chart_battle_customer_visit_name = db.Column(db.Text)
     chart_battle_customer_visit_position = db.Column(db.Text)
     chart_battle_customer_visit_matters = db.Column(db.Text)
@@ -97,7 +98,7 @@ def export_worklog():
                      'forecast_public_deposit_year_increase', 'forecast_public_effective_account',
                      'forecast_public_effective_account_base_increase', 'forecast_deposit_value_customer',
                      'forecast_deposit_value_customer_base_increase', 'new_customer_visit_name',
-                     'new_customer_visit_position', 'chart_battle_customer_visit_name',
+                     'new_customer_visit_position','new_customer_visit_matters', 'chart_battle_customer_visit_name',
                      'chart_battle_customer_visit_position', 'chart_battle_customer_visit_matters',
                      'other_customer_visit_name', 'other_customer_visit_position', 'other_customer_visit_matters',
                      'other_work']
@@ -138,6 +139,7 @@ def export_worklog():
         'forecast_deposit_value_customer_base_increase': '预测存款价值客户年增量',
         'new_customer_visit_name': '拜访新户名称',
         'new_customer_visit_position': '新客户拜访姓名职务',
+        'new_customer_visit_matters': '新客户拜访事项',
         'chart_battle_customer_visit_name': '拜访挂图作战客户名称',
         'chart_battle_customer_visit_position': '挂图作战客户拜访姓名职务',
         'chart_battle_customer_visit_matters': '挂图作战客户拜访事项',
@@ -185,33 +187,44 @@ def export_worklog():
 
 @app.route('/api/export_worklog_priority', methods=['GET'])
 def export_worklog_priority():
-    date_str = request.args.get('oneDate')
+    start_date_str = request.args.get('startDate')
+    end_date_str = request.args.get('endDate')
 
-    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
 
-    if target_date:
-        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    if start_date and end_date:
+        worklogs = Worklog.query.filter(Worklog.date.between(start_date, end_date)).all()
     else:
         return "No date provided."
 
     # 将这些数据转换为一个pandas DataFrame
     data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
 
-    # 只选择你需要的列
-    columns_needed = ['name', 'public_deposit_balance', 'public_deposit_day_increase', 'public_deposit_year_increase', 'public_deposit_change_detail']
+    # Convert the 'date' column to string format
+    data['date'] = data['date'].apply(lambda x: x.strftime('%Y-%m-%d') if pd.notnull(x) else '')
+
+    # Decide the columns based on whether startDate is the same as endDate
+    if start_date != end_date:
+        columns_needed = ['name', 'date', 'public_deposit_balance', 'public_deposit_day_increase', 'public_deposit_year_increase', 'public_deposit_change_detail']
+    else:
+        columns_needed = ['name', 'public_deposit_balance', 'public_deposit_day_increase', 'public_deposit_year_increase', 'public_deposit_change_detail']
     data = data[columns_needed]
 
     # 对数据根据'public_deposit_day_increase'进行降序排列
     data = data.sort_values('public_deposit_day_increase', ascending=False)
 
     # 重命名列
-    data = data.rename(columns={
+    columns_dict = {
         'name': '姓名',
+        'date': '日期',
         'public_deposit_balance': '存款余额',
         'public_deposit_day_increase': '存款日增量',
         'public_deposit_year_increase': '存款年增量',
         'public_deposit_change_detail': '存款变动明细',
-    })
+    }
+    columns_dict = {key: value for key, value in columns_dict.items() if key in columns_needed}  # Only keep those needed
+    data = data.rename(columns=columns_dict)
 
     def custom_len(s):
         length = 0
@@ -245,49 +258,62 @@ def export_worklog_priority():
             worksheet.set_column(idx, idx, max_len, cell_format)
 
         # 添加标题行，合并1-5列单元格并居中显示
-        title = date_str + " " + "重点工作"
+        title = start_date_str + " ~ " + end_date_str + " " + "重点工作" if start_date_str != end_date_str else start_date_str + " " + "重点工作"
         title_format = writer.book.add_format({
         'align': 'center',
         'bold': True,
         'font_size': 14,
         'border': 1
         })
-        worksheet.merge_range('A1:E1', title, title_format)
+        worksheet.merge_range('A1:F1', title, title_format)
 
     excel_file.seek(0)
 
     return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog.xlsx')
 
 
+
+
 @app.route('/api/export_worklog_effective_account', methods=['GET'])
 def export_worklog_effective_account():
-    date_str = request.args.get('oneDate')
+    start_date_str = request.args.get('startDate')
+    end_date_str = request.args.get('endDate')
 
-    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
 
-    if target_date:
-        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    if start_date and end_date:
+        worklogs = Worklog.query.filter(Worklog.date.between(start_date, end_date)).all()
     else:
         return "No date provided."
 
     # 将这些数据转换为一个pandas DataFrame
     data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
 
-    # 只选择你需要的列
-    columns_needed = ['name', 'public_effective_account_balance', 'public_effective_account_day_increase', 'public_effective_account_base_increase', 'public_effective_account_change_detail']
+    # Convert the 'date' column to string format
+    data['date'] = data['date'].apply(lambda x: x.strftime('%Y-%m-%d') if pd.notnull(x) else '')
+
+    # Decide the columns based on whether startDate is the same as endDate
+    if start_date != end_date:
+        columns_needed = ['name', 'date', 'public_effective_account_balance', 'public_effective_account_day_increase', 'public_effective_account_base_increase', 'public_effective_account_change_detail']
+    else:
+        columns_needed = ['name', 'public_effective_account_balance', 'public_effective_account_day_increase', 'public_effective_account_base_increase', 'public_effective_account_change_detail']
     data = data[columns_needed]
 
-    # 对数据根据'effective_account_day_increase'进行降序排列
+    # 对数据根据'public_effective_account_day_increase'进行降序排列
     data = data.sort_values('public_effective_account_day_increase', ascending=False)
 
     # 重命名列
-    data = data.rename(columns={
+    columns_dict = {
         'name': '姓名',
+        'date': '日期',
         'public_effective_account_balance': '有效户',
         'public_effective_account_day_increase': '有效户日增量',
         'public_effective_account_base_increase': '有效户年增量',
         'public_effective_account_change_detail': '有效户变动明细',
-    })
+    }
+    columns_dict = {key: value for key, value in columns_dict.items() if key in columns_needed}  # Only keep those needed
+    data = data.rename(columns=columns_dict)
 
     def custom_len(s):
         length = 0
@@ -320,49 +346,71 @@ def export_worklog_effective_account():
             # 注意这里设置的行范围从1开始，以避开第一行（标题行）
             worksheet.set_column(idx, idx, max_len, cell_format)
 
-        # 添加标题行，合并1-5列单元格并居中显示
-        title = date_str + " " + "有效户"
+        # 创建一个格式对象，用于设置标题行的样式
         title_format = writer.book.add_format({
-        'align': 'center',
-        'bold': True,
-        'font_size': 14,
-        'border': 1
+            'align': 'center',
+            'bold': True,
+            'font_size': 14,
+            'border': 1
         })
-        worksheet.merge_range('A1:E1', title, title_format)
+
+        # 添加标题行，合并单元格并居中显示
+        if start_date != end_date:
+            title = start_date_str + " ~ " + end_date_str + " " + "有效户"
+            worksheet.merge_range('A1:F1', title, title_format)
+        else:
+            title = start_date_str + " " + "有效户"
+            worksheet.merge_range('A1:E1', title, title_format)
 
     excel_file.seek(0)
 
     return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_effective_account.xlsx')
 
 
+
+
 @app.route('/api/export_worklog_client_visit', methods=['GET'])
 def export_worklog_client_visit():
-    date_str = request.args.get('oneDate')
+    start_date_str = request.args.get('startDate')
+    end_date_str = request.args.get('endDate')
 
-    target_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
 
-    if target_date:
-        worklogs = Worklog.query.filter(Worklog.date == target_date).all()
+    if start_date and end_date:
+        worklogs = Worklog.query.filter(Worklog.date.between(start_date, end_date)).all()
     else:
         return "No date provided."
 
     # 将这些数据转换为一个pandas DataFrame
     data = pd.DataFrame([worklog.__dict__ for worklog in worklogs])
 
-    # 只选择你需要的列
-    columns_needed = ['name', 'new_customer_visit_name', 'chart_battle_customer_visit_name', 'chart_battle_customer_visit_matters', 'other_customer_visit_name', 'other_customer_visit_matters']
+    # Convert the 'date' column to string format
+    data['date'] = data['date'].apply(lambda x: x.strftime('%Y-%m-%d') if pd.notnull(x) else '')
+
+    # Decide the columns based on whether startDate is the same as endDate
+    if start_date != end_date:
+        columns_needed = ['name', 'date', 'new_customer_visit_name','new_customer_visit_matters', 'chart_battle_customer_visit_name', 'chart_battle_customer_visit_matters', 'other_customer_visit_name', 'other_customer_visit_matters','other_work']
+    else:
+        columns_needed = ['name', 'new_customer_visit_name','new_customer_visit_matters', 'chart_battle_customer_visit_name', 'chart_battle_customer_visit_matters', 'other_customer_visit_name', 'other_customer_visit_matters','other_work']
     data = data[columns_needed]
 
     # 重命名列
-    data = data.rename(columns={
+    columns_dict = {
         'name': '姓名',
+        'date': '日期',
         'new_customer_visit_name': '新户名称',
-        'chart_battle_customer_visit_name': '挂图作战名称',
+        'new_customer_visit_matters': '新户详情',
+        'chart_battle_customer_visit_name': '挂图客户',
         'chart_battle_customer_visit_matters': '详情',
         'other_customer_visit_name': '其他客户名称',
         'other_customer_visit_matters': '其他客户详情',
-    })
+        'other_work':'其他',
+    }
+    columns_dict = {key: value for key, value in columns_dict.items() if key in columns_needed}  # Only keep those needed
+    data = data.rename(columns=columns_dict)
 
+    # 根据具体的字符数量计算列宽
     def custom_len(s):
         length = 0
         for char in s:
@@ -381,7 +429,7 @@ def export_worklog_client_visit():
         # 创建一个格式对象，用于设置单元格的对齐方式和字体大小
         cell_format = writer.book.add_format()
         cell_format.set_align('left')  # 设置单元格为左对齐
-        cell_format.set_font_size(8)  # 将字体大小设置为8
+        cell_format.set_font_size(7)  # 将字体大小设置为8
 
         for idx, col in enumerate(data):
             series = data[col]
@@ -389,7 +437,7 @@ def export_worklog_client_visit():
                 series.astype(str).map(custom_len).max(),
                 custom_len(str(series.name))
             ))
-            max_len = max_len * 0.7  # 将列宽缩小为原来的0.55倍
+            max_len = max_len * 0.6  # 将列宽缩小为原来的0.55倍
 
             # 使用set_column方法设置列的宽度、对齐方式和字体大小
             worksheet.set_column(idx, idx, max_len, cell_format)
@@ -397,19 +445,19 @@ def export_worklog_client_visit():
         # 设置行高
         worksheet.set_default_row(15)  # 将行高设置为15，这个值可能需要根据你的实际需求进行调整
 
-        # 添加标题行，合并1-6列单元格并居中显示
-        title = date_str + " " + "客户拜访工作"
+        # 添加标题行，合并1-5列单元格并居中显示
+        title = start_date_str + " ~ " + end_date_str + " " + "客户拜访工作" if start_date_str != end_date_str else start_date_str + " " + "客户拜访工作"
         title_format = writer.book.add_format({
             'align': 'center',
             'bold': True,
-            'font_size': 8,  # 将标题行的字体大小设置为7
-            'border': 1  # 添加边框
+            'font_size': 7,
+            'border': 1
         })
-        worksheet.merge_range('A1:F1', title, title_format)
+        worksheet.merge_range('A1:I1', title, title_format)
 
-        # 创建一个新的格式对象，用于设置列标题的字体大小
+         # 创建一个新的格式对象，用于设置列标题的字体大小
         header_format = writer.book.add_format({
-            'font_size': 8,  # 将列标题的字体大小设置为7
+            'font_size': 7,  # 将列标题的字体大小设置为7
             'bold': True,
             'align': 'center',
             'border': 1 
@@ -422,6 +470,7 @@ def export_worklog_client_visit():
     excel_file.seek(0)
 
     return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_client_visit.xlsx')
+
 
 
 
@@ -467,6 +516,7 @@ def add_worklog():
         forecast_deposit_value_customer_base_increase=worklog_info['deposit_value_customer_forecast_base_increase'],
         new_customer_visit_name=worklog_info['new_customer_visit_name'],
         new_customer_visit_position=worklog_info['new_customer_visit_position'],
+        new_customer_visit_matters=worklog_info['new_customer_visit_matters'],
         chart_battle_customer_visit_name=worklog_info['chart_battle_customer_visit_name'],
         chart_battle_customer_visit_position=worklog_info['chart_battle_customer_visit_position'],
         chart_battle_customer_visit_matters=worklog_info['chart_battle_customer_visit_matters'],
@@ -518,6 +568,7 @@ def get_recent_worklog():
             'deposit_value_customer_forecast_base_increase': recent_worklog.forecast_deposit_value_customer_base_increase,
             'new_customer_visit_name': recent_worklog.new_customer_visit_name,
             'new_customer_visit_position': recent_worklog.new_customer_visit_position,
+            'new_customer_visit_matters': recent_worklog.new_customer_visit_matters,
             'chart_battle_customer_visit_name': recent_worklog.chart_battle_customer_visit_name,
             'chart_battle_customer_visit_position': recent_worklog.chart_battle_customer_visit_position,
             'chart_battle_customer_visit_matters': recent_worklog.chart_battle_customer_visit_matters,
