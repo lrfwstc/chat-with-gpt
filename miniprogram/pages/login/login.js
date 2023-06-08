@@ -39,9 +39,9 @@ Page({
 					  // 如果用户已注册，根据角色跳转到相应页面
 					  // 如果用户已注册，根据角色跳转到相应页面
 						if (role) {
-							if (role === 'Developer') {
+							if (role === 'Developer' || role === 'manager_manager' || role === 'branch_manager') {
 							wx.showActionSheet({
-								itemList: ['Manager', 'Admin'],
+								itemList: ['日志填报', '管理界面'],
 								success: function(res) {
 								console.log(res.tapIndex)
 								if (res.tapIndex === 0) {

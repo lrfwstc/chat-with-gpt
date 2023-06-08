@@ -8,6 +8,8 @@ Page({
     minmanagerUsers: [],
     visitorUsers: [],
     preusers: [],
+    manager_managerusers: [],
+    branch_managerusers: [],
     roleNames: {
       'preManager': '对公客户经理',
       'preAdmin': '管理员',
@@ -33,12 +35,14 @@ Page({
       method: 'GET',
       success: function(res) {
         console.log('getUsers successful', res.data);
-        const managerUsers = res.data.filter(user => user.role === 'Manager');
+        const managerUsers = res.data.filter(user => user.role === 'Manager'|| user.role === 'manager_manager' || user.role === 'branch_manager');
+        const manager_managerusers = res.data.filter(user => user.role === 'manager_manager');
+        const branch_managerusers = res.data.filter(user => user.role === 'branch_manager');
         const adminUsers = res.data.filter(user => user.role === 'Admin');
         const minmanagerUsers = res.data.filter(user => user.role === 'minManager');
         const visitorUsers = res.data.filter(user => user.role === 'Visitor');
         const preusers = res.data.filter(user => user.role === 'preManager' || user.role === 'preminManager' || user.role === 'preAdmin' || user.role === 'preVisitor');
-        that.setData({ managerUsers, adminUsers,minmanagerUsers,visitorUsers,preusers });
+        that.setData({ managerUsers, adminUsers,minmanagerUsers,visitorUsers,preusers,manager_managerusers,branch_managerusers });
         that.checkWorklogExistenceBulk(managerUsers);
       }
     });

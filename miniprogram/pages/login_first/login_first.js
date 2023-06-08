@@ -39,7 +39,7 @@ Page({
 					if (res.statusCode == 200) {
 					  let role = res.data.role;
 					  // 如果用户已注册，根据角色跳转到相应页面
-					   if (role === 'Manager' || role === 'Admin' || role === 'minManager' || role === 'Visitor'|| role === 'Developer') {
+					   if (role === 'Manager' || role === 'Admin' || role === 'minManager' || role === 'Visitor'|| role === 'Developer'|| role === 'manager_manager' || role === 'branch_manager') {
 						wx.redirectTo({
 						  url: '/pages/index/index'
 						});

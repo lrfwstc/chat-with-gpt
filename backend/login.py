@@ -25,7 +25,7 @@ class User(db.Model):
     __tablename__ = 'User'
     wechat_id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('Manager','Admin','minManager','Visitor','preManager','preminManager','preAdmin','preVisitor','Developer'), nullable=False)
+    role = db.Column(db.Enum('Manager','Admin','minManager','Visitor','preManager','preminManager','preAdmin','preVisitor','Developer','manager_manager', 'branch_manager'), nullable=False)
 
 class Worklog(db.Model):
     __tablename__ = 'Worklog'

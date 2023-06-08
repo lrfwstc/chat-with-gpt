@@ -5,6 +5,12 @@
       <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
     </view>
   </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="管理经理" name="6">
+    <view class='user' wx:for="{{manager_managerusers}}" wx:key="id" >
+      <text class="text"> {{item.name}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
+    </view>
+  </van-collapse-item>
   <van-collapse-item class="collapse-item" title="小微客户经理" name="2">
     <view class='user' wx:for="{{minmanagerUsers}}" wx:key="id" >
       <text class="text"> {{item.name}}</text>
@@ -28,6 +34,12 @@
       <text class="text"> {{item.name}},申请角色：{{roleNames[item.role]}}</text>
       <button data-id="{{item.wechat_id}}" bindtap='exchangeUser'>通过</button>
       <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>拒绝</button>
+    </view>
+  </van-collapse-item>
+  <van-collapse-item class="collapse-item" title="二级支行行长" name="7">
+    <view class='user' wx:for="{{branch_managerusers}}" wx:key="id" >
+      <text class="text"> {{item.name}}</text>
+      <button data-id="{{item.wechat_id}}" bindtap='deleteUser'>删除</button>
     </view>
   </van-collapse-item>
 </van-collapse>
