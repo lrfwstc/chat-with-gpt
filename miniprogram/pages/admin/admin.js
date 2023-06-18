@@ -129,17 +129,13 @@ Page({
           url: `https://wendaoxiansheng.com/api/export_worklog_client_visit?startDate=${this.data.onestartDate}&endDate=${this.data.oneendDate}`, 
           success: function(res) {
             var filePath = res.tempFilePath
-            wx.openDocument({
-              showMenu:true,
-              filePath: filePath,
-              fileType: 'xlsx',
-              success: function(res) {
-                console.log('打开文档成功')
-              },
+            wx.previewImage({
+              current: filePath, // 当前显示图片的http链接
+              urls: [filePath] // 需要预览的图片http链接列表
             })
           },
         })
-      },
+      }
        
   });
   

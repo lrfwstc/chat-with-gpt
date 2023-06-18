@@ -35,7 +35,7 @@ Page({
 					openid: openid
 				  },
 				  success: res => {
-					console.log('check_user成功',res.statusCode); 
+					console.log('check_user成功',res); 
 					if (res.statusCode == 200) {
 					  let role = res.data.role;
 					  // 如果用户已注册，根据角色跳转到相应页面

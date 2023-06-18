@@ -5,6 +5,11 @@ from flask import Flask, request, jsonify, send_file, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.urls import url_quote
 from docx import Document
+
+import matplotlib.pyplot as plt
+from pandas.plotting import table
+import matplotlib.font_manager
+
 import tempfile
 import datetime
 import pandas as pd
@@ -21,6 +26,10 @@ app.config['SQLALCHEMY_POOL_SIZE'] = 200  # 设置连接池大小为 20
 
 db = SQLAlchemy(app)
 
+fonts = matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+font_names = [matplotlib.font_manager.get_font(f).family_name for f in fonts]
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei']
+
 class User(db.Model):
     __tablename__ = 'User'
     wechat_id = db.Column(db.String(255), primary_key=True)
@@ -33,28 +42,28 @@ class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     wechat_id = db.Column(db.String(255), nullable=False)
     date = db.Column(db.Date)
-    public_deposit_balance = db.Column(db.Integer)
-    public_deposit_day_increase = db.Column(db.Integer)
-    public_deposit_year_increase = db.Column(db.Integer)
+    public_deposit_balance = db.Column(db.Float)
+    public_deposit_day_increase = db.Column(db.Float)
+    public_deposit_year_increase = db.Column(db.Float)
     public_deposit_change_detail = db.Column(db.Text)
-    public_effective_account_balance = db.Column(db.Integer)
-    public_effective_account_day_increase = db.Column(db.Integer)
-    public_effective_account_base_increase = db.Column(db.Integer)
+    public_effective_account_balance = db.Column(db.Float)
+    public_effective_account_day_increase = db.Column(db.Float)
+    public_effective_account_base_increase = db.Column(db.Float)
     public_effective_account_change_detail = db.Column(db.Text)
-    deposit_value_customer_balance = db.Column(db.Integer)
-    deposit_value_customer_day_increase = db.Column(db.Integer)
-    deposit_value_customer_base_increase = db.Column(db.Integer)
+    deposit_value_customer_balance = db.Column(db.Float)
+    deposit_value_customer_day_increase = db.Column(db.Float)
+    deposit_value_customer_base_increase = db.Column(db.Float)
     deposit_value_customer_change_detail = db.Column(db.Text)
-    digital_currency_active_account_balance = db.Column(db.Integer)
-    digital_currency_active_account_day_increase = db.Column(db.Integer)
-    digital_currency_active_account_base_increase = db.Column(db.Integer)
+    digital_currency_active_account_balance = db.Column(db.Float)
+    digital_currency_active_account_day_increase = db.Column(db.Float)
+    digital_currency_active_account_base_increase = db.Column(db.Float)
     digital_currency_active_account_change_detail = db.Column(db.Text)
-    forecast_public_deposit_balance = db.Column(db.Integer)
-    forecast_public_deposit_year_increase = db.Column(db.Integer)
-    forecast_public_effective_account = db.Column(db.Integer)
-    forecast_public_effective_account_base_increase = db.Column(db.Integer)
-    forecast_deposit_value_customer = db.Column(db.Integer)
-    forecast_deposit_value_customer_base_increase = db.Column(db.Integer)
+    forecast_public_deposit_balance = db.Column(db.Float)
+    forecast_public_deposit_year_increase = db.Column(db.Float)
+    forecast_public_effective_account = db.Column(db.Float)
+    forecast_public_effective_account_base_increase = db.Column(db.Float)
+    forecast_deposit_value_customer = db.Column(db.Float)
+    forecast_deposit_value_customer_base_increase = db.Column(db.Float)
     new_customer_visit_name = db.Column(db.Text)
     new_customer_visit_position = db.Column(db.Text)
     new_customer_visit_matters = db.Column(db.Text)
@@ -67,6 +76,22 @@ class Worklog(db.Model):
     other_work = db.Column(db.Text)
     name = db.Column(db.String(255), nullable=False)
     
+
+def excel_to_image(df, image_file):
+    print(font_names)
+    plt.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题。
+
+    fig, ax = plt.subplots(figsize=(12, 4)) # set size frame
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+    ax.set_frame_on(False)  # no visible frame
+    tabla = table(ax, df, loc='center', cellLoc = 'center')  # where df is your data frame
+    tabla.auto_set_font_size(False) # Activate set fontsize manually
+    tabla.set_fontsize(10) # if ++fontsize is necessary ++colWidths
+    tabla.scale(1.2, 1.2) # Table size (colWidths)
+    plt.savefig(image_file)
+    plt.close()
+
 @app.route('/api/export_worklog', methods=['GET'])
 def export_worklog():
     start_date_str = request.args.get('startDate')
@@ -410,16 +435,6 @@ def export_worklog_client_visit():
     columns_dict = {key: value for key, value in columns_dict.items() if key in columns_needed}  # Only keep those needed
     data = data.rename(columns=columns_dict)
 
-    # 根据具体的字符数量计算列宽
-    def custom_len(s):
-        length = 0
-        for char in s:
-            if '\u4e00' <= char <= '\u9fff':  # 判断是否为中文字符
-                length += 2
-            else:
-                length += 1
-        return length
-
     # 创建一个Excel文件
     excel_file = io.BytesIO()
     with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
@@ -427,25 +442,25 @@ def export_worklog_client_visit():
         worksheet = writer.sheets['Sheet1']
 
         # 创建一个格式对象，用于设置单元格的对齐方式和字体大小
-        cell_format = writer.book.add_format()
-        cell_format.set_align('left')  # 设置单元格为左对齐
-        cell_format.set_font_size(7)  # 将字体大小设置为8
+        cell_format = writer.book.add_format({
+            'align': 'left',  # 设置单元格为左对齐
+            'font_size': 7,  # 将字体大小设置为7
+            'text_wrap': True  # 设置文本自动换行
+        })
 
-        for idx, col in enumerate(data):
-            series = data[col]
-            max_len = max((
-                series.astype(str).map(custom_len).max(),
-                custom_len(str(series.name))
-            ))
-            max_len = max_len * 0.6  # 将列宽缩小为原来的0.55倍
-
-            # 使用set_column方法设置列的宽度、对齐方式和字体大小
-            worksheet.set_column(idx, idx, max_len, cell_format)
+        # 手动设置每一列的列宽
+        if start_date != end_date:
+            column_widths = [4, 8, 8, 8, 8, 8, 15, 15, 45]  # 修改为你所需要的列宽
+        else:
+            column_widths = [4, 10, 10, 10, 10, 12, 12, 40, 0.1]  # 修改为你所需要的列宽
+        
+        for idx, width in enumerate(column_widths):
+            worksheet.set_column(idx, idx, width, cell_format)
 
         # 设置行高
         worksheet.set_default_row(15)  # 将行高设置为15，这个值可能需要根据你的实际需求进行调整
 
-        # 添加标题行，合并1-5列单元格并居中显示
+        # 添加标题行，合并1-9列单元格并居中显示
         title = start_date_str + " ~ " + end_date_str + " " + "客户拜访工作" if start_date_str != end_date_str else start_date_str + " " + "客户拜访工作"
         title_format = writer.book.add_format({
             'align': 'center',
@@ -460,7 +475,7 @@ def export_worklog_client_visit():
             'font_size': 7,  # 将列标题的字体大小设置为7
             'bold': True,
             'align': 'center',
-            'border': 1 
+            'border': 1
         })
 
         # 将新的格式应用到列标题
@@ -469,8 +484,10 @@ def export_worklog_client_visit():
 
     excel_file.seek(0)
 
-    return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_client_visit.xlsx')
+    image_file = 'worklog_client_visit.png'
+    excel_to_image(data, image_file)
 
+    return send_file(image_file, mimetype='image/png')
 
 
 

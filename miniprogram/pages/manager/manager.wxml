@@ -120,11 +120,11 @@
   </view>
   <view class="flex-container">
     <text>客户简称</text>
-    <input class="input" type="text" value="{{chart_battle_customer_visit_name}}" bindinput="handleInput_n" data-field="planning_customer_visit_name" />
+    <input class="input" type="text" value="{{chart_battle_customer_visit_name}}" bindinput="handleInput_n" data-field="chart_battle_customer_visit_name" />
     <text>拜访客户的姓名职务</text>
-    <input class="input" type="text" value="{{chart_battle_customer_visit_position}}" bindinput="handleInput_n" data-field="planning_customer_visit_position" />
+    <input class="input" type="text" value="{{chart_battle_customer_visit_position}}" bindinput="handleInput_n" data-field="chart_battle_customer_visit_position" />
     <text>拜访事项</text>
-    <input class="input" type="text" value="{{chart_battle_customer_visit_matters}}" bindinput="handleInput_n" data-field="planning_customer_visit_matters" />
+    <input class="input" type="text" value="{{chart_battle_customer_visit_matters}}" bindinput="handleInput_n" data-field="chart_battle_customer_visit_matters" />
   </view>
   <view class="text-container">
     <text>3.其他客户拜访: </text>
