@@ -30,6 +30,21 @@ fonts = matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
 font_names = [matplotlib.font_manager.get_font(f).family_name for f in fonts]
 plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei']
 
+def excel_to_image(df, image_file):
+    print(font_names)
+    plt.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题。
+
+    fig, ax = plt.subplots(figsize=(12, 4)) # set size frame
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+    ax.set_frame_on(False)  # no visible frame
+    tabla = table(ax, df, loc='center', cellLoc = 'center')  # where df is your data frame
+    tabla.auto_set_font_size(False) # Activate set fontsize manually
+    tabla.set_fontsize(10) # if ++fontsize is necessary ++colWidths
+    tabla.scale(1.2, 1.2) # Table size (colWidths)
+    plt.savefig(image_file)
+    plt.close()
+
 class User(db.Model):
     __tablename__ = 'User'
     wechat_id = db.Column(db.String(255), primary_key=True)
@@ -77,20 +92,7 @@ class Worklog(db.Model):
     name = db.Column(db.String(255), nullable=False)
     
 
-def excel_to_image(df, image_file):
-    print(font_names)
-    plt.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题。
 
-    fig, ax = plt.subplots(figsize=(12, 4)) # set size frame
-    ax.xaxis.set_visible(False)  # hide the x axis
-    ax.yaxis.set_visible(False)  # hide the y axis
-    ax.set_frame_on(False)  # no visible frame
-    tabla = table(ax, df, loc='center', cellLoc = 'center')  # where df is your data frame
-    tabla.auto_set_font_size(False) # Activate set fontsize manually
-    tabla.set_fontsize(10) # if ++fontsize is necessary ++colWidths
-    tabla.scale(1.2, 1.2) # Table size (colWidths)
-    plt.savefig(image_file)
-    plt.close()
 
 @app.route('/api/export_worklog', methods=['GET'])
 def export_worklog():
