@@ -22,8 +22,8 @@
         "pages/manager/manager",
         "pages/admin/admin",
         "pages/temp/temp",
-        "pages/users/users"
-        
+        "pages/users/users",
+        "pages/prediction/prediction"
     ],
     "window": {
         "backgroundTextStyle": "light",

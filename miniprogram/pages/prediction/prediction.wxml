@@ -1,0 +1,22 @@
+<!-- prediction.wxml -->
+<view class='container'>
+  <view class='userinfo'>
+    <text>姓名：{{name}} </text>
+    <text>当前日期：{{currentDate}}</text>
+  </view>
+  <view class='userinfo'>
+    <text>截止日期：{{currentDate}} </text>
+  </view>
+
+  <view class='current-time'>
+    <text>现在的时间是：{{currentTime}}</text>
+  </view>
+
+  <view class='input-area'>
+	<text>当月存款比年初增量</text>
+    <input type='text' placeholder='请输入预测数据' bindinput='handleInput' value='{{predictionData}}'/>
+	<text>详细原因</text>
+	<input type='text' placeholder='请输入详细原因' bindinput='handleInput' value='{{reason_predictionData}}'/>
+    <button bindtap='handleSubmit'>提交</button>
+  </view>
+</view>

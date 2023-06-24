@@ -9,6 +9,7 @@ from docx import Document
 import matplotlib.pyplot as plt
 from pandas.plotting import table
 import matplotlib.font_manager
+from matplotlib.font_manager import FontProperties
 
 import tempfile
 import datetime
@@ -23,17 +24,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:bdthznb666@172.17.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_POOL_SIZE'] = 200  # 设置连接池大小为 20
 
-
 db = SQLAlchemy(app)
 
-fonts = matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
-font_names = [matplotlib.font_manager.get_font(f).family_name for f in fonts]
-plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei']
+# 设置字体路径为微软雅黑
+plt.rcParams['font.sans-serif'] = ['/usr/share/fonts/msyh/MSYH.TTC']
+plt.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题。
+
+myfont = FontProperties(fname='/usr/share/fonts/msyh/MSYH.TTC')
 
 def excel_to_image(df, image_file):
-    print(font_names)
-    plt.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题。
-
+    # 将myfont设置为默认字体
+    plt.rcParams['font.family'] = myfont.get_name()
+    
     fig, ax = plt.subplots(figsize=(12, 4)) # set size frame
     ax.xaxis.set_visible(False)  # hide the x axis
     ax.yaxis.set_visible(False)  # hide the y axis
@@ -45,11 +47,13 @@ def excel_to_image(df, image_file):
     plt.savefig(image_file)
     plt.close()
 
+
+
 class User(db.Model):
     __tablename__ = 'User'
     wechat_id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('Manager','Admin','minManager','Visitor','preManager','preminManager','preAdmin','preVisitor','Developer','manager_manager', 'branch_manager'), nullable=False)
+    role = db.Column(db.Enum('Developer','Manager','preManager','Admin','preAdmin','minManager','preminManager','Visitor','preVisitor','manager_manager', 'premanager_manager','branch_manager', 'prebranch_manager'), nullable=False)
 
 class Worklog(db.Model):
     __tablename__ = 'Worklog'
@@ -486,10 +490,7 @@ def export_worklog_client_visit():
 
     excel_file.seek(0)
 
-    image_file = 'worklog_client_visit.png'
-    excel_to_image(data, image_file)
-
-    return send_file(image_file, mimetype='image/png')
+    return send_file(excel_file, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, attachment_filename='worklog_client_visit.xlsx')
 
 
 

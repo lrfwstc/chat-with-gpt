@@ -35,7 +35,7 @@ Page({
       method: 'GET',
       success: function(res) {
         console.log('getUsers successful', res.data);
-        const managerUsers = res.data.filter(user => user.role === 'Manager'|| user.role === 'manager_manager' || user.role === 'branch_manager');
+        const managerUsers = res.data.filter(user => user.role === 'Manager'|| user.role === 'manager_manager' );
         const manager_managerusers = res.data.filter(user => user.role === 'manager_manager');
         const branch_managerusers = res.data.filter(user => user.role === 'branch_manager');
         const adminUsers = res.data.filter(user => user.role === 'Admin');

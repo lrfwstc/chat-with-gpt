@@ -1,7 +1,7 @@
 <view class="container">
   <view class="header">
-    <text>姓名：{{manager_name}}</text>
-    <text>日期：{{date}}</text>
+    <text>姓名：{{manager_name}}      </text>
+    <text>     日期：{{date}}</text>
   </view>
   <!-- 对公存款 -->
   <view class="text-container">

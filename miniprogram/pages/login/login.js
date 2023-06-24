@@ -37,11 +37,10 @@ Page({
 					if (res.statusCode == 200) {
 					  let role = res.data.role;
 					  // 如果用户已注册，根据角色跳转到相应页面
-					  // 如果用户已注册，根据角色跳转到相应页面
 						if (role) {
-							if (role === 'Developer' || role === 'manager_manager' || role === 'branch_manager') {
+							if (role === 'Developer' || role === 'manager_manager') {
 							wx.showActionSheet({
-								itemList: ['日志填报', '管理界面'],
+								itemList: ['日志填报','管理界面','月末预测'],
 								success: function(res) {
 								console.log(res.tapIndex)
 								if (res.tapIndex === 0) {
@@ -52,6 +51,10 @@ Page({
 									wx.redirectTo({
 									url: '/pages/admin/admin'
 									});
+								} else if (res.tapIndex === 2) {
+									wx.redirectTo({
+									url: '/pages/prediction/prediction'
+									});
 								}
 								},
 								fail: function(res) {
@@ -59,8 +62,27 @@ Page({
 								}
 							});
 							} else if (role === 'Manager') {
+								wx.showActionSheet({
+									itemList: ['日志填报','月末预测'],
+									success: function(res) {
+									console.log(res.tapIndex)
+									if (res.tapIndex === 0) {
+										wx.redirectTo({
+										url: '/pages/manager/manager'
+										});
+									} else if (res.tapIndex === 1) {
+										wx.redirectTo({
+										url: '/pages/prediction/prediction'
+										});
+									}
+									},
+									fail: function(res) {
+									console.log(res.errMsg)
+									}
+								});
+							} else if (role === 'branch_manager') {
 							wx.redirectTo({
-								url: '/pages/manager/manager'
+								url: '/pages/prediction/prediction'
 							});
 							} else if (role === 'Admin') {
 							wx.redirectTo({

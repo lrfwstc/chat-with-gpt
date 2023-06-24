@@ -3,8 +3,8 @@ Page({
 	  openid: '',
 	  showRegisterForm: false,
 	  roleIndex: -1,  // 添加一个新的属性来保存角色的索引
-      roles: ['对公客户经理', '小微客户经理', '管理员','游客'],  // 添加一个数组来保存所有的角色
-	  backroles: ['preManager', 'preminManager', 'preAdmin','preVisitor'] ,
+      roles: ['对公客户经理', '小微客户经理', '管理员','游客','管理经理','二级支行行长'],  // 添加一个数组来保存所有的角色
+	  backroles: ['preManager', 'preminManager', 'preAdmin','preVisitor','premanager_manager','prebranch_manager'] ,
 	  role: ''
   
 	},
@@ -43,7 +43,7 @@ Page({
 						wx.redirectTo({
 						  url: '/pages/index/index'
 						});
-					  } else if (role === 'preManager' || role === 'preminManager' || role === 'preAdmin' || role === 'preVisitor') {
+					  } else if (role === 'preManager' || role === 'preminManager' || role === 'preAdmin' || role === 'preVisitor'|| role === 'premanager_manager' || role === 'prebranch_manager') {
 						wx.showModal({
 						  title: '提示',
 						  content: '您已提交过审核，请联系管理员',
