@@ -9,6 +9,8 @@ Page({
       forecastValue: '',
       timer: null,
       deadline:'',
+      predictionData:'',
+      reason_predictionData:'',
     },
   
     onLoad: function() {
@@ -140,6 +142,13 @@ Page({
       });
     },
   
+    handleInput: function(e) {
+      const { field } = e.currentTarget.dataset;
+      this.setData({
+        [field]: e.detail.value,
+      });
+    },
+
     submitForecast: function() {
       var that = this;
       if (this.data.forecastValue) {

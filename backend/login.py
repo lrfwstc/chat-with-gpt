@@ -95,6 +95,15 @@ class Worklog(db.Model):
     other_work = db.Column(db.Text)
     name = db.Column(db.String(255), nullable=False)
     
+class Prediction(db.Model):
+    __tablename__ = 'prediction'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    wechat_id = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.Date, nullable=True)
+    name = db.Column(db.String(255), nullable=False)
+    forecast_public_deposit_year_increase = db.Column(db.Float, nullable=True)
+    reason_forecast_public_deposit_year_increase = db.Column(db.Text, nullable=True)
+    locked = db.Column(db.SmallInteger, nullable=True)
 
 
 
