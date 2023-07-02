@@ -23,7 +23,8 @@
         "pages/admin/admin",
         "pages/temp/temp",
         "pages/users/users",
-        "pages/prediction/prediction"
+        "pages/prediction/prediction",
+        "pages/admin/admin_prediction/admin_prediction"
     ],
     "window": {
         "backgroundTextStyle": "light",

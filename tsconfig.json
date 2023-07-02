@@ -32,5 +32,6 @@
     , "miniprogram/pages/manager/manager.js"
     , "miniprogram/pages/login_first/login_first.js"
     , "miniprogram/pages/prediction/prediction.js"
+    , "miniprogram/pages/admin/admin_prediction/admin_prediction.js"
   ]
 }

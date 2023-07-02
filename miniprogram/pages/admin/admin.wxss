@@ -48,6 +48,11 @@
 	
   }
 
+  .views_noborder{
+	margin-top: 10px;
+	width: 600rpx;
+  }
+
   .picker{
 	border: 1px solid #999;
 	margin: 10px;

@@ -1,3 +1,4 @@
+<!-- users.wxml -->
 <van-collapse class="collapse" value="{{ activeNames }}" bind:change="onChange">
   <van-collapse-item class="collapse-item" title="对公客户经理" name="1">
     <view class='user' wx:for="{{managerUsers}}" wx:key="id" >

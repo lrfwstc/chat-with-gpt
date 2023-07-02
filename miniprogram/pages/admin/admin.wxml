@@ -1,5 +1,8 @@
 <view class="usermotto">
   <button class="user-motto" bindtap="goToUsers"> 人员名单管理 </button>
+  <view class="views_noborder">
+  <button class="user-motto" bindtap="goToadmin_prediction">当月预测管理</button>
+  </view>
   <view class="views">
     <picker mode="date" start="2020-01-01" end="{{date}}" bindchange="bindStartDateChange">
       <view class="picker">
@@ -28,4 +31,6 @@
   <button bindtap="effective_account">当日有效户</button>
   <button bindtap="client_visit">当日营销推进</button>
   </view>
+  
 </view>
+  

@@ -681,6 +681,120 @@ def exchange_user():
 
     return jsonify({'status': 'success'})
 
+
+@app.route('/api/add_prediction', methods=['POST'])
+def add_prediction():
+    prediction_info = request.json
+
+    # 检查日期是否在正确的格式
+    if 'date' not in prediction_info or prediction_info['date'] == "":
+        return jsonify({'status': 'failure', 'message': 'Date is required'})
+
+    # 解析日期，只取年份和月份
+    prediction_date = datetime.datetime.strptime(prediction_info['date'], '%Y-%m')
+    year_month = datetime.datetime(prediction_date.year, prediction_date.month, 1)
+
+    # 查询数据库是否有相同wechat_id和date的数据
+    old_prediction = Prediction.query.filter_by(
+        wechat_id=prediction_info['wechat_id'], 
+        date=year_month
+    ).first()
+
+    # 如果找到匹配的数据，删除它
+    if old_prediction:
+        db.session.delete(old_prediction)
+        db.session.commit()
+
+    new_prediction = Prediction(
+        wechat_id=prediction_info['wechat_id'],
+        date=year_month,
+        name=prediction_info['name'],
+        forecast_public_deposit_year_increase=prediction_info['predictionData'],
+        reason_forecast_public_deposit_year_increase=prediction_info['reason_predictionData'],
+        locked=prediction_info.get('locked', 0)  # Default to 0 if not provided
+    )
+    db.session.add(new_prediction)
+    db.session.commit()
+
+    # 如果旧的数据被覆盖，返回一个特定的消息
+    if old_prediction:
+        return jsonify({'status': 'success', 'message': 'New prediction has overwritten old prediction'})
+    else:
+        return jsonify({'status': 'success', 'message': 'New prediction has been added'})
+
+
+@app.route('/api/lock_user', methods=['POST'])
+def lock_user():
+    data = request.json
+    wechat_id = data.get('wechat_id')
+    date_str = data.get('date')
+    if wechat_id is None or date_str is None:
+        return jsonify({'status': 'failure', 'message': 'wechat_id and date are required'})
+
+    date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    prediction = Prediction.query.filter_by(wechat_id=wechat_id, date=date).first()
+    if prediction is None:
+        return jsonify({'status': 'failure', 'message': 'Prediction not found'})
+
+    prediction.locked = 1
+    db.session.commit()
+
+    return jsonify({'status': 'success', 'message': 'Prediction has been locked'})
+
+@app.route('/api/unlock_user', methods=['POST'])
+def unlock_user():
+    data = request.json
+    wechat_id = data.get('wechat_id')
+    date_str = data.get('date')
+    if wechat_id is None or date_str is None:
+        return jsonify({'status': 'failure', 'message': 'wechat_id and date are required'})
+
+    date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    prediction = Prediction.query.filter_by(wechat_id=wechat_id, date=date).first()
+    if prediction is None:
+        return jsonify({'status': 'failure', 'message': 'Prediction not found'})
+
+    prediction.locked = 0
+    db.session.commit()
+
+    return jsonify({'status': 'success', 'message': 'Prediction has been unlocked'})
+
+
+@app.route('/api/get_predictions', methods=['GET'])
+def get_predictions():
+    predictions = Prediction.query.all()
+    predictions = [prediction.to_dict() for prediction in predictions]
+    return jsonify(predictions)
+
+
+@app.route('/api/prediction_check_bulk', methods=['POST'])
+def check_predictions():
+    names = request.json['names']
+    date = request.json['date']
+    prediction_date = datetime.datetime.strptime(date, '%Y-%m')
+    year_month = datetime.datetime(prediction_date.year, prediction_date.month, 1)
+    users_forecast_dict = {}
+    for name in names:
+        prediction = Prediction.query.filter_by(name=name, date=year_month).first()
+        if prediction is not None:
+            users_forecast_dict[name] = {
+                'forecast_public_deposit_year_increase': prediction.forecast_public_deposit_year_increase,
+                'reason_forecast_public_deposit_year_increase': prediction.reason_forecast_public_deposit_year_increase,
+                'locked': prediction.locked,
+                # 添加其他你需要的列
+            }
+        else:
+            users_forecast_dict[name] = {
+                'forecast_public_deposit_year_increase': '无',
+                'reason_forecast_public_deposit_year_increase': '无',
+                'locked': '无',
+                # 添加其他你需要的列，设置为'无'
+            }
+    return jsonify(users_forecast_dict)
+
+
+
+
 @app.route('/api/register', methods=['POST'])
 def register():
     openid = request.json.get('openid')

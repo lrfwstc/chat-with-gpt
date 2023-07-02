@@ -5,7 +5,7 @@
     <text>当前日期：{{currentDate}}</text>
   </view>
   <view class='userinfo'>
-    <text>截止日期：{{currentDate}} </text>
+    <text>预测截止时间：{{currentDate}} 24：00</text>
   </view>
 
   <view class='current-time'>
@@ -13,10 +13,10 @@
   </view>
 
   <view class='input-area'>
-	<text>当月存款比年初增量</text>
+    <text>月末预测</text>
     <input type='text' placeholder='请输入预测数据' bindinput='handleInput' value='{{predictionData}}' data-field="predictionData"/>
-	<text>详细原因</text>
-	<input type='text' placeholder='请输入详细原因' bindinput='handleInput' value='{{reason_predictionData}}' data-field="reason_predictionData"/>
+    <text>详细原因</text>
+    <input type='text' placeholder='请输入详细原因' bindinput='handleInput_n' value='{{reason_predictionData}}' data-field="reason_predictionData"/>
     <button bindtap='handleSubmit'>提交</button>
   </view>
 </view>

@@ -71,6 +71,12 @@ Page({
           url: '/pages/users/users'
         });
       },
+
+      goToadmin_prediction: function() {
+        wx.navigateTo({
+          url: '/pages/admin/admin_prediction/admin_prediction'
+        });
+      },
     
       
       downloadWorklog: function() {

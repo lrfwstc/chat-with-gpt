@@ -1,0 +1,8 @@
+<!-- admin_prediction.wxml -->
+<van-collapse class="collapse" value="{{ activeNames }}" bind:change="onChange">
+  <van-collapse-item class="collapse-item" wx:for="{{managerUsers}}" wx:key="name" title="{{item.name}}，{{item.locked ? '已锁定' : '未锁定'}}，预测增长：{{item.forecast_public_deposit_year_increase}}" name="{{item.name}}">
+    <button data-wechat_id="{{item.wechat_id}}" bindtap='lockUser' wx:if="{{!item.locked}}">锁定</button>
+    <button data-wechat_id="{{item.wechat_id}}" bindtap='unlockUser' wx:if="{{item.locked}}">解锁</button>
+	<text class="text"> 明细：{{item.reason_forecast_public_deposit_year_increase}}</text>
+  </van-collapse-item>
+</van-collapse>
